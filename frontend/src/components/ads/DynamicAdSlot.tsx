@@ -1,0 +1,1 @@
+export { DynamicAdSlot } from "../marketplace";
