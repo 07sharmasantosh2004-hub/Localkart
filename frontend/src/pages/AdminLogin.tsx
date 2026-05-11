@@ -5,6 +5,7 @@ import * as z from "zod";
 import { ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -15,9 +16,17 @@ const adminLoginSchema = z.object({
   password: z.string().min(6),
 });
 
+async function sha256Hex(value: string) {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 export default function AdminLogin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { signInLocalAdmin } = useAuth();
 
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<z.infer<typeof adminLoginSchema>>({
     resolver: zodResolver(adminLoginSchema),
@@ -25,6 +34,19 @@ export default function AdminLogin() {
 
   const onSubmit = async (values: z.infer<typeof adminLoginSchema>) => {
     setError("");
+    const envAdminEmail = (import.meta.env.VITE_LOCALKART_ADMIN_EMAIL || "").trim().toLowerCase();
+    const envAdminPasswordHash = (import.meta.env.VITE_LOCALKART_ADMIN_PASSWORD_SHA256 || "").trim().toLowerCase();
+    const typedEmail = values.email.trim().toLowerCase();
+
+    if (import.meta.env.DEV && envAdminEmail && envAdminPasswordHash && typedEmail === envAdminEmail) {
+      const typedPasswordHash = await sha256Hex(values.password);
+
+      if (typedPasswordHash === envAdminPasswordHash) {
+        signInLocalAdmin();
+        navigate("/admin", { replace: true });
+        return;
+      }
+    }
 
     const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
       email: values.email,
