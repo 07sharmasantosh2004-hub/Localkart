@@ -193,8 +193,8 @@ export function PartnerLayout() {
       <SEOHead config={{ title: "Partner Dashboard | LocalKart", description: "Manage your LocalKart shop listing, services, products and WhatsApp leads." }} />
       
       <header className="sticky top-0 z-50 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-6">
-          <Link to="/" className="flex items-center gap-3 group">
+        <div className="mx-auto flex min-h-20 max-w-7xl flex-wrap items-center justify-between gap-3 px-3 py-3 sm:flex-nowrap sm:px-4 md:px-6">
+          <Link to="/" className="group flex min-w-0 items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center overflow-hidden">
                <img 
                  src="/logo.png" 
@@ -205,7 +205,7 @@ export function PartnerLayout() {
                  className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" 
                />
             </div>
-            <div className="flex flex-col">
+            <div className="flex min-w-0 flex-col">
               <span className="text-xl font-black leading-none tracking-tight text-slate-950">
                 Local<span className="text-emerald-700">Kart</span>
               </span>
@@ -217,15 +217,15 @@ export function PartnerLayout() {
               </div>
             </div>
           </Link>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="rounded-xl border-slate-200 font-black text-slate-600 hover:bg-slate-50 shadow-sm transition-all">
+          <div className="flex w-full items-center gap-3 sm:w-auto">
+            <Button asChild variant="outline" className="w-full rounded-xl border-slate-200 font-black text-slate-600 shadow-sm transition-all hover:bg-slate-50 sm:w-auto">
               <Link to="/" className="flex items-center gap-2">View Live Shop <ChevronRight className="h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[280px_1fr] md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-6 px-3 py-6 sm:px-4 md:px-6 md:py-8 lg:grid-cols-[280px_1fr] lg:gap-8">
         <aside className="lg:sticky lg:top-28 lg:h-[calc(100vh-140px)]">
            <div className="flex h-full flex-col gap-4 rounded-[2.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 lg:gap-6">
               <nav className="flex gap-2 overflow-x-auto no-scrollbar pr-1 lg:block lg:flex-1 lg:space-y-1 lg:overflow-y-auto" aria-label="Partner sections">

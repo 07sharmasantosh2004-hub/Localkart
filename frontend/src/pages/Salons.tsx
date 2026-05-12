@@ -65,8 +65,8 @@ export default function Salons() {
         }}
       />
 
-      <div className="mx-auto max-w-7xl space-y-12 px-4 py-12">
-        <section className="relative overflow-hidden rounded-[3.5rem] bg-[#064E3B] p-8 md:p-16 text-white">
+      <div className="mx-auto max-w-7xl space-y-10 px-3 py-6 sm:px-4 sm:py-10 md:space-y-12 md:py-12">
+        <section className="mobile-safe-card relative overflow-hidden bg-[#064E3B] text-white">
           <div className="relative z-10 max-w-3xl space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-widest text-emerald-100 backdrop-blur-sm">
               Queue chhodo, time bachao
@@ -74,7 +74,7 @@ export default function Salons() {
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
               Nearby Salons for Direct Booking
             </h1>
-            <p className="text-xl leading-8 text-emerald-50/80">
+            <p className="text-lg leading-8 text-emerald-50/80 sm:text-xl">
               Find trusted salons near you, select your service, and connect directly on WhatsApp to save time.
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function Salons() {
           </div>
         </section>
 
-        <section className="rounded-[2.5rem] border border-slate-100 bg-white/90 p-4 shadow-xl shadow-emerald-950/5 backdrop-blur-xl sm:sticky sm:top-24 sm:z-40">
+        <section className="rounded-[1.5rem] border border-slate-100 bg-white/90 p-3 shadow-xl shadow-emerald-950/5 backdrop-blur-xl sm:sticky sm:top-24 sm:z-40 sm:rounded-[2.5rem] sm:p-4">
           <div className="grid gap-4 lg:grid-cols-[1.5fr_auto_auto] lg:items-center">
             <div className="relative group">
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-700" />
@@ -185,7 +185,7 @@ export default function Salons() {
           )}
         </section>
 
-        <section className="rounded-[3rem] bg-emerald-50 p-12 md:p-16">
+        <section className="mobile-safe-card bg-emerald-50">
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div className="space-y-4">
               <h2 className="text-3xl font-black text-slate-950">Salon booking should not take extra effort</h2>

@@ -75,16 +75,16 @@ export default function FoodDetail() {
         }}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-6 pb-24 md:pb-12">
-        <Button asChild variant="ghost" className="mb-4 rounded-xl font-bold text-slate-700">
+      <div className="mx-auto max-w-7xl px-3 py-6 pb-24 sm:px-4 md:pb-12">
+        <Button asChild variant="ghost" className="mb-4 w-full rounded-xl font-bold text-slate-700 sm:w-auto">
           <Link to="/food">
             <ArrowLeft className="h-4 w-4" />
             Back to food shops
           </Link>
         </Button>
 
-        <section className="overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-sm">
-          <div className="relative h-72 md:h-[430px]">
+        <section className="overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white shadow-sm sm:rounded-[2rem]">
+          <div className="relative h-[340px] md:h-[430px]">
             <img src={shop.cover_image} alt={shop.name} className="h-full w-full object-cover" loading="eager" decoding="async" fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/15 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-8">
@@ -94,7 +94,7 @@ export default function FoodDetail() {
                 <DistanceBadge meters={shop.distance_meters} />
                 <RatingBadge rating={shop.rating} />
               </div>
-              <h1 className="text-4xl font-black tracking-tight md:text-5xl">{shop.name}</h1>
+              <h1 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">{shop.name}</h1>
               <p className="mt-2 max-w-2xl text-white/90">{shop.address}</p>
             </div>
           </div>

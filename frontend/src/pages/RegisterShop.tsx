@@ -16,8 +16,8 @@ export default function RegisterShop() {
         }}
       />
 
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-12 md:py-20">
-        <section className="relative overflow-hidden rounded-[3.5rem] bg-[#064E3B] p-8 md:p-16 text-white shadow-2xl shadow-emerald-950/20">
+      <div className="mx-auto max-w-7xl space-y-10 px-3 py-6 sm:px-4 sm:py-10 md:space-y-16 md:py-20">
+        <section className="mobile-safe-card relative overflow-hidden bg-[#064E3B] text-white shadow-2xl shadow-emerald-950/20">
           <div className="relative z-10 max-w-3xl space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-widest text-emerald-100 backdrop-blur-sm">
               Grow your local business
@@ -25,10 +25,10 @@ export default function RegisterShop() {
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
               Register Your Shop for Free
             </h1>
-            <p className="text-xl leading-8 text-emerald-50/80">
+            <p className="text-lg leading-8 text-emerald-50/80 sm:text-xl">
               Get local customers directly on WhatsApp. No commission, no complicated app, no technical setup. Just pure business growth.
             </p>
-            <div className="flex flex-wrap gap-6 pt-4">
+            <div className="grid gap-4 pt-4 sm:flex sm:flex-wrap sm:gap-6">
                {[
                  { label: "Free Forever", icon: Zap },
                  { label: "Direct Leads", icon: Target },
@@ -56,7 +56,7 @@ export default function RegisterShop() {
             { title: "Zero Commission", desc: "You keep 100% of what you earn from customers." },
             { title: "Human Relationship", desc: "Build trust with neighborhood families directly." },
           ].map((benefit) => (
-            <div key={benefit.title} className="group flex flex-col gap-4 rounded-[2.5rem] border border-slate-100 bg-white p-8 transition-all hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-950/5">
+            <div key={benefit.title} className="group flex flex-col gap-4 rounded-[1.75rem] border border-slate-100 bg-white p-5 transition-all hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-950/5 sm:rounded-[2.5rem] sm:p-8">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-transform group-hover:scale-110 group-hover:rotate-3">
                 <CheckCircle2 className="h-7 w-7" />
               </div>
@@ -79,7 +79,7 @@ export default function RegisterShop() {
             </div>
             
             <div className="space-y-6">
-              <div className="flex gap-6 rounded-[2rem] border border-emerald-100 bg-emerald-50/50 p-8">
+              <div className="flex flex-col gap-4 rounded-[2rem] border border-emerald-100 bg-emerald-50/50 p-5 min-[420px]:flex-row min-[420px]:gap-6 sm:p-8">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm">
                    <MessageCircle className="h-6 w-6" />
                 </div>
@@ -90,7 +90,7 @@ export default function RegisterShop() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-6 rounded-[2rem] border border-amber-100 bg-amber-50/50 p-8">
+              <div className="flex flex-col gap-4 rounded-[2rem] border border-amber-100 bg-amber-50/50 p-5 min-[420px]:flex-row min-[420px]:gap-6 sm:p-8">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-amber-700 shadow-sm">
                    <ShieldCheck className="h-6 w-6" />
                 </div>
@@ -103,7 +103,7 @@ export default function RegisterShop() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] bg-slate-950 p-8 text-white">
+            <div className="rounded-[2rem] bg-slate-950 p-5 text-white sm:p-8">
                <h4 className="text-xl font-black mb-4">Need help registering?</h4>
                <p className="text-slate-400 mb-6">Talk to our merchant support team if you face any issues while listing your shop.</p>
                <Button asChild variant="outline" className="h-12 w-full rounded-xl border-white/20 bg-white/5 font-black text-white hover:bg-white/10">

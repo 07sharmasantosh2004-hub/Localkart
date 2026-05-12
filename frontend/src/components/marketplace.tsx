@@ -1256,14 +1256,28 @@ export function AdminTable({ title, rows }: { title: string; rows: Record<string
 
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-100 p-4">
+      <div className="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-black text-slate-950">{title}</h2>
-        <Button variant="outline" className="rounded-xl">
+        <Button variant="outline" className="w-full rounded-xl sm:w-auto">
           <Filter className="h-4 w-4" />
           Filter
         </Button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="grid gap-3 p-3 md:hidden">
+        {rows.map((row) => (
+          <article key={JSON.stringify(row)} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3">
+            <dl className="grid gap-3">
+              {columns.map((column) => (
+                <div key={column} className="min-w-0">
+                  <dt className="text-[10px] font-black uppercase tracking-widest text-slate-400">{column}</dt>
+                  <dd className="mt-1 text-sm font-semibold text-slate-700">{row[column]}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        ))}
+      </div>
+      <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
             <tr>
@@ -1290,7 +1304,7 @@ export function AdminTable({ title, rows }: { title: string; rows: Record<string
 export function ApprovalCard({ business }: { business: Business }) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 min-[380px]:flex-row">
         <img src={business.cover_image} alt={business.name} className="h-20 w-20 rounded-2xl object-cover" />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -1301,12 +1315,12 @@ export function ApprovalCard({ business }: { business: Business }) {
           <p className="mt-1 text-sm font-semibold text-slate-700">{business.whatsapp}</p>
         </div>
       </div>
-      <div className="mt-4 flex gap-2">
-        <Button className="flex-1 rounded-xl bg-emerald-700 font-black hover:bg-emerald-800">
+      <div className="mt-4 grid gap-2 min-[380px]:grid-cols-2">
+        <Button className="w-full rounded-xl bg-emerald-700 font-black hover:bg-emerald-800">
           <Check className="h-4 w-4" />
           Approve
         </Button>
-        <Button variant="outline" className="flex-1 rounded-xl border-red-200 font-black text-red-700 hover:bg-red-50">
+        <Button variant="outline" className="w-full rounded-xl border-red-200 font-black text-red-700 hover:bg-red-50">
           <X className="h-4 w-4" />
           Reject
         </Button>

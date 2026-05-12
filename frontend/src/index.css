@@ -124,6 +124,18 @@
   svg {
     max-width: 100%;
   }
+  h1,
+  h2,
+  h3,
+  p,
+  a,
+  button,
+  label,
+  input,
+  select,
+  textarea {
+    overflow-wrap: anywhere;
+  }
   :where(a, button, input, select, textarea):focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 3px;
@@ -150,5 +162,10 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .mobile-safe-card {
+    border-radius: clamp(1.25rem, 8vw, 3rem);
+    padding: clamp(1.25rem, 6vw, 4rem);
   }
 }

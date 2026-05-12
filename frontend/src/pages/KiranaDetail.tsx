@@ -48,19 +48,19 @@ export default function KiranaDetail() {
         }}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
-        <Button asChild variant="ghost" className="mb-8 rounded-2xl bg-white/50 px-6 font-black text-slate-700 shadow-sm backdrop-blur-sm hover:bg-white">
+      <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 md:py-12">
+        <Button asChild variant="ghost" className="mb-6 w-full rounded-2xl bg-white/50 px-4 font-black text-slate-700 shadow-sm backdrop-blur-sm hover:bg-white sm:mb-8 sm:w-auto sm:px-6">
           <Link to="/kirana" className="flex items-center gap-2">
             <ArrowLeft className="h-5 w-5" />
             Explore all kirana shops
           </Link>
         </Button>
 
-        <section className="group relative overflow-hidden rounded-[3.5rem] border border-white bg-white shadow-2xl shadow-emerald-950/10">
-          <div className="relative h-[300px] md:h-[500px]">
+        <section className="group relative overflow-hidden rounded-[1.5rem] border border-white bg-white shadow-2xl shadow-emerald-950/10 sm:rounded-[3.5rem]">
+          <div className="relative h-[360px] sm:h-[300px] md:h-[500px]">
             <img src={shop.cover_image} alt={shop.name} className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="eager" decoding="async" fetchPriority="high" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 md:p-12">
               <div className="mb-6 flex flex-wrap gap-3">
                 <ShopStatusBadge isOpen={shop.is_open} />
                 <DistanceBadge meters={shop.distance_meters} />
@@ -72,8 +72,8 @@ export default function KiranaDetail() {
                   </div>
                 )}
               </div>
-              <h1 className="text-4xl font-black tracking-tight text-white md:text-7xl">{shop.name}</h1>
-              <p className="mt-4 max-w-2xl text-lg font-medium text-white/80">{shop.address}</p>
+              <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl md:text-7xl">{shop.name}</h1>
+              <p className="mt-3 max-w-2xl text-base font-medium text-white/80 sm:mt-4 sm:text-lg">{shop.address}</p>
             </div>
           </div>
         </section>
@@ -96,7 +96,7 @@ export default function KiranaDetail() {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <section className="space-y-8">
-            <div className="rounded-[3rem] border border-slate-100 bg-white p-8 shadow-sm">
+            <div className="mobile-safe-card border border-slate-100 bg-white shadow-sm">
               <h2 className="text-2xl font-black text-slate-950 mb-6">Popular categories</h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {categories.map((category) => (
@@ -109,7 +109,7 @@ export default function KiranaDetail() {
               <h3 className="text-xl font-black text-slate-950 mb-6">Regular items</h3>
               <div className="grid gap-4">
                 {products.map((product) => (
-                  <div key={product.id} className="group flex items-center justify-between rounded-3xl border border-slate-50 bg-slate-50/50 p-6 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5">
+                  <div key={product.id} className="group flex flex-col gap-3 rounded-3xl border border-slate-50 bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between sm:p-6">
                     <div>
                       <p className="text-lg font-black text-slate-950">{product.name}</p>
                       <p className="text-sm font-bold text-slate-500 uppercase tracking-tighter">{product.unit}</p>
@@ -135,8 +135,8 @@ export default function KiranaDetail() {
               </div>
             </div>
 
-            <div className="rounded-[3rem] border border-amber-100 bg-amber-50/50 p-8">
-               <div className="flex items-start gap-4">
+            <div className="mobile-safe-card border border-amber-100 bg-amber-50/50">
+               <div className="flex flex-col gap-4 min-[420px]:flex-row min-[420px]:items-start">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-amber-600 shadow-sm">
                      <Home className="h-6 w-6" />
                   </div>

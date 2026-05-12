@@ -1848,7 +1848,21 @@ function DataTable<T>({
       {!pageRows.length ? <EmptyStateBlock title="No records found" text="Try clearing filters or search terms." /> : null}
       {pageRows.length ? (
         <div className="overflow-hidden rounded-3xl border border-slate-100 bg-white">
-          <div className="overflow-x-auto">
+          <div className="grid gap-3 p-3 md:hidden">
+            {pageRows.map((row, index) => (
+              <article key={JSON.stringify(row).slice(0, 80) + index} className="rounded-2xl border border-slate-100 bg-slate-50/60 p-3">
+                <dl className="grid gap-3">
+                  {columns.map((column) => (
+                    <div key={column.label} className="min-w-0">
+                      <dt className="text-[10px] font-black uppercase tracking-widest text-slate-400">{column.label}</dt>
+                      <dd className="mt-1 text-sm font-semibold text-slate-700 [&_*]:max-w-full">{column.render(row)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </article>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                 <tr>{columns.map((column) => <th key={column.label} className="px-4 py-3 font-black">{column.label}</th>)}</tr>
