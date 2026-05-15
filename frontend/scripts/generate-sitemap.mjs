@@ -3,11 +3,11 @@ import { resolve } from "node:path";
 
 const siteUrl = process.env.VITE_SITE_URL || "https://localkart.in";
 const cities = ["bengaluru", "mumbai", "delhi", "pune", "hyderabad"];
-const areas = ["indiranagar", "koramangala", "hsr-layout", "whitefield"];
+const areas = ["central", "east", "west", "south"];
 
 const staticRoutes = [
   "/",
-  "/salons",
+  "/tiffin-services",
   "/kirana",
   "/food",
   "/register-shop",
@@ -19,10 +19,10 @@ const staticRoutes = [
 ];
 
 const dynamicRoutes = cities.flatMap((city) => [
-  `/salon-booking/${city}`,
+  `/tiffin-service/${city}`,
   `/kirana-delivery/${city}`,
   `/food-delivery/${city}`,
-  ...areas.flatMap((area) => [`/salon-booking/${city}/${area}`, `/kirana-delivery/${city}/${area}`, `/food-delivery/${city}/${area}`]),
+  ...areas.flatMap((area) => [`/tiffin-services/city/${city}/${area}`, `/kirana-delivery/${city}/${area}`, `/food-delivery/${city}/${area}`]),
 ]);
 
 const urls = [...staticRoutes, ...dynamicRoutes];

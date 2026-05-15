@@ -1,7 +1,7 @@
 {
   "name": "LocalKart",
   "short_name": "LocalKart",
-  "description": "Book salon appointments or order groceries from trusted local shops near you directly on WhatsApp.",
+  "description": "Find tiffin services, food providers and kirana shops near you directly on WhatsApp.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

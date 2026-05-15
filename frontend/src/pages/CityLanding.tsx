@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
-import { foodShops, kiranaStores, salons } from "../lib/mockData";
-import { CityLandingContent, FoodCard, KiranaCard, SalonCard, SEOHead, SectionHeader } from "../components/marketplace";
+import { foodShops, kiranaStores, tiffinProviders } from "../lib/mockData";
+import { CityLandingContent, FoodCard, KiranaCard, SEOHead, SectionHeader, TiffinCard } from "../components/marketplace";
 import type { BusinessType } from "../lib/types";
 import { titleCase } from "../lib/utils";
 
@@ -9,11 +9,11 @@ export default function CityLanding({ type }: { type: BusinessType }) {
   const cityName = titleCase(city) || "Your City";
   const areaName = titleCase(area);
   const place = areaName ? `${areaName}, ${cityName}` : cityName;
-  const isSalon = type === "salon";
+  const isTiffin = type === "tiffin";
   const isFood = type === "food";
-  const routeBase = isSalon ? "salon-booking" : isFood ? "food-delivery" : "kirana-delivery";
-  const seoTitle = isSalon
-    ? `Book Nearby Salons in ${place} Directly on WhatsApp`
+  const routeBase = isTiffin ? "tiffin-service" : isFood ? "food-delivery" : "kirana-delivery";
+  const seoTitle = isTiffin
+    ? `Find Nearby Tiffin Services in ${place} Directly on WhatsApp`
     : isFood
       ? areaName
         ? `Nearby Food Shops in ${place} | Direct WhatsApp Order`
@@ -25,8 +25,8 @@ export default function CityLanding({ type }: { type: BusinessType }) {
       <SEOHead
         config={{
           title: seoTitle,
-          description: isSalon
-            ? `Explore nearby salons in ${place}, choose services, and send booking requests directly on WhatsApp.`
+          description: isTiffin
+            ? `Explore nearby tiffin services in ${place}, compare meal plans, and send enquiries directly on WhatsApp.`
             : isFood
               ? `Finding local food in ${place} should be simple. Discover cafés, Chinese corners, momo shops, bakeries, juice shops and snack points, then send your order directly on WhatsApp.`
               : `Discover nearby kirana stores in ${place} and send grocery lists directly on WhatsApp without unnecessary app charges.`,
@@ -34,8 +34,8 @@ export default function CityLanding({ type }: { type: BusinessType }) {
           jsonLd: [
             {
               "@context": "https://schema.org",
-              "@type": isSalon ? "BeautySalon" : isFood ? "FoodEstablishment" : "GroceryStore",
-              name: isSalon ? `Nearby salons in ${place}` : isFood ? `Nearby food shops in ${place}` : `Nearby kirana shops in ${place}`,
+              "@type": isTiffin ? "FoodEstablishment" : isFood ? "FoodEstablishment" : "GroceryStore",
+              name: isTiffin ? `Nearby tiffin services in ${place}` : isFood ? `Nearby food shops in ${place}` : `Nearby kirana shops in ${place}`,
               areaServed: place,
               url: `/${routeBase}/${city}`,
             },
@@ -61,13 +61,13 @@ export default function CityLanding({ type }: { type: BusinessType }) {
         <CityLandingContent type={type} city={city} area={area} />
         <section>
           <SectionHeader
-            eyebrow={isSalon ? "Salons near you" : isFood ? "Food shops near you" : "Kirana shops near you"}
-            title={isSalon ? `Popular salon options in ${place}` : isFood ? `Local food options in ${place}` : `Local kirana options in ${place}`}
+            eyebrow={isTiffin ? "Tiffin services near you" : isFood ? "Food shops near you" : "Kirana shops near you"}
+            title={isTiffin ? `Popular tiffin options in ${place}` : isFood ? `Local food options in ${place}` : `Local kirana options in ${place}`}
             text="These sample listings show how city and locality SEO pages will feel once connected to live Supabase data."
           />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {(isSalon ? salons : isFood ? foodShops : kiranaStores).map((business) => {
-              if (isSalon) return <SalonCard key={business.id} salon={business} />;
+            {(isTiffin ? tiffinProviders : isFood ? foodShops : kiranaStores).map((business) => {
+              if (isTiffin) return <TiffinCard key={business.id} provider={business} />;
               if (isFood) return <FoodCard key={business.id} shop={business} />;
               return <KiranaCard key={business.id} shop={business} />;
             })}
@@ -76,15 +76,15 @@ export default function CityLanding({ type }: { type: BusinessType }) {
         <section className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
           <SectionHeader
             eyebrow="Explore more"
-            title={isSalon ? "Popular salons near you" : isFood ? "Food shops near you" : "Kirana shops near you"}
-            text={isSalon ? "Try nearby city and area pages for more salon discovery." : isFood ? "Try nearby city and area pages for local food shops." : "Try nearby city and area pages for local grocery shops."}
+            title={isTiffin ? "Popular tiffin services near you" : isFood ? "Food shops near you" : "Kirana shops near you"}
+            text={isTiffin ? "Try nearby city and area pages for more tiffin discovery." : isFood ? "Try nearby city and area pages for local food shops." : "Try nearby city and area pages for local grocery shops."}
           />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["/salon-booking/bengaluru", "Bengaluru salons"],
-              ["/salon-booking/bengaluru/indiranagar", "Indiranagar salons"],
-              ["/kirana-delivery/bengaluru", "Bengaluru kirana shops"],
-              ["/food-delivery/bengaluru", "Bengaluru food shops"],
+              ["/tiffin-service/your-city", "Tiffin services in your city"],
+              ["/tiffin-services/city/your-city/your-area", "Home food in your area"],
+              ["/kirana-delivery/your-city", "Kirana shops in your city"],
+              ["/food-delivery/your-city", "Food shops in your city"],
               ["/register-shop", "Register your shop"],
             ].map(([to, label]) => (
               <Link key={to} to={to} className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm font-black text-slate-800 hover:bg-emerald-50">

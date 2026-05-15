@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { isSupabaseConfigured, supabase } from "./supabase";
-import { foodMenuItems, foodShops, kiranaProducts, kiranaStores, salonServices, salons } from "./mockData";
-import type { Business, BusinessType, FoodMenuItem, KiranaProduct, SalonService } from "./types";
+import { foodMenuItems, foodShops, kiranaProducts, kiranaStores, mealPlans, tiffinProviders } from "./mockData";
+import type { Business, BusinessType, DatabaseBusinessType, FoodMenuItem, KiranaProduct, MealPlan } from "./types";
 
 interface NearbyBusinessRow {
   id: string;
-  type: BusinessType;
+  type: DatabaseBusinessType;
   name: string;
   slug: string;
   description: string | null;
@@ -25,10 +25,20 @@ interface NearbyBusinessRow {
 }
 
 const fallbackByType: Record<BusinessType, Business[]> = {
-  salon: salons,
+  tiffin: tiffinProviders,
   kirana: kiranaStores,
   food: foodShops,
 };
+
+const legacyTypeByType: Record<BusinessType, DatabaseBusinessType[]> = {
+  tiffin: ["tiffin", "salon"],
+  kirana: ["kirana"],
+  food: ["food"],
+};
+
+function normalizeBusinessType(type: DatabaseBusinessType): BusinessType {
+  return type === "salon" ? "tiffin" : type;
+}
 
 function mapNearbyBusiness(row: NearbyBusinessRow): Business {
   const foodCategory = Array.isArray(row.food_categories) ? row.food_categories[0] : row.food_categories;
@@ -36,7 +46,7 @@ function mapNearbyBusiness(row: NearbyBusinessRow): Business {
     id: row.id,
     name: row.name,
     slug: row.slug,
-    type: row.type,
+    type: normalizeBusinessType(row.type),
     area: row.area,
     city: row.city,
     address: row.address,
@@ -44,13 +54,13 @@ function mapNearbyBusiness(row: NearbyBusinessRow): Business {
     phone: row.phone || row.whatsapp_number,
     distance_meters: Math.round(row.distance_meters || 0),
     rating: Number(row.rating_avg || 0),
-    cover_image: row.cover_image_url || fallbackByType[row.type][0]?.cover_image || "/logo.png",
+    cover_image: row.cover_image_url || fallbackByType[normalizeBusinessType(row.type)][0]?.cover_image || "/logo.png",
     is_open: true,
     delivery_available: row.home_delivery_available,
     pickup_available: row.pickup_available ?? true,
     min_order: row.min_order_amount ? Number(row.min_order_amount) : undefined,
     description: row.description || undefined,
-    category: foodCategory?.name || (row.type === "food" ? "Local Food" : undefined),
+    category: foodCategory?.name || (normalizeBusinessType(row.type) === "food" ? "Local Food" : normalizeBusinessType(row.type) === "tiffin" ? "Tiffin Service" : undefined),
   };
 }
 
@@ -59,17 +69,20 @@ export function useNearbyBusinesses({
   lat,
   lng,
   radiusKm,
+  searchLocation,
 }: {
   type: BusinessType;
   lat?: number;
   lng?: number;
   radiusKm: number;
+  searchLocation?: string;
 }) {
   return useQuery({
-    queryKey: ["nearby-businesses", type, lat, lng, radiusKm],
+    queryKey: ["nearby-businesses", type, lat, lng, radiusKm, searchLocation],
     queryFn: async () => {
+      const locationTerm = searchLocation?.trim().toLowerCase();
       if (!isSupabaseConfigured) {
-        return fallbackByType[type];
+        return filterByManualLocation(fallbackByType[type], locationTerm);
       }
 
       if (typeof lat === "number" && typeof lng === "number") {
@@ -77,28 +90,40 @@ export function useNearbyBusinesses({
           user_lat: lat,
           user_lng: lng,
           radius_km: radiusKm,
-          business_type: type,
+          business_type: type === "tiffin" ? null : type,
         });
 
         if (error) throw error;
-        return ((data ?? []) as NearbyBusinessRow[]).map(mapNearbyBusiness);
+        return ((data ?? []) as NearbyBusinessRow[])
+          .filter((row) => legacyTypeByType[type].includes(row.type))
+          .map(mapNearbyBusiness);
       }
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("businesses")
         .select(
           "id, type, name, slug, description, phone, whatsapp_number, address, area, city, rating_avg, cover_image_url, home_delivery_available, pickup_available, min_order_amount, food_categories(name)",
         )
-        .eq("type", type)
         .eq("status", "approved")
         .order("is_featured", { ascending: false })
         .order("rating_avg", { ascending: false })
         .limit(24);
 
+      if (type !== "tiffin") {
+        query = query.eq("type", type);
+      }
+
+      if (locationTerm) {
+        const escaped = locationTerm.replace(/[%_]/g, "");
+        query = query.or(`city.ilike.%${escaped}%,area.ilike.%${escaped}%,pincode.ilike.%${escaped}%`);
+      }
+
+      const { data, error } = await query;
+
       if (error) throw error;
-      return ((data ?? []) as unknown as Omit<NearbyBusinessRow, "distance_meters">[]).map((row) =>
-        mapNearbyBusiness({ ...row, distance_meters: 0 }),
-      );
+      return ((data ?? []) as unknown as Omit<NearbyBusinessRow, "distance_meters">[])
+        .filter((row) => legacyTypeByType[type].includes(row.type))
+        .map((row) => mapNearbyBusiness({ ...row, distance_meters: 0 }));
     },
     staleTime: 1000 * 60 * 3,
   });
@@ -111,18 +136,23 @@ export function useBusinessBySlug(type: BusinessType, slug: string | undefined) 
       if (!slug) return null;
       if (!isSupabaseConfigured) return fallbackByType[type].find((item) => item.slug === slug) || fallbackByType[type][0];
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("businesses")
         .select(
           "id, type, name, slug, description, phone, whatsapp_number, address, area, city, rating_avg, cover_image_url, home_delivery_available, pickup_available, min_order_amount, food_categories(name)",
         )
-        .eq("type", type)
         .eq("slug", slug)
-        .eq("status", "approved")
-        .maybeSingle();
+        .eq("status", "approved");
+
+      if (type !== "tiffin") {
+        query = query.eq("type", type);
+      }
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       if (!data) return null;
+      if (!legacyTypeByType[type].includes((data as { type: DatabaseBusinessType }).type)) return null;
 
       return mapNearbyBusiness({ ...((data as unknown) as Omit<NearbyBusinessRow, "distance_meters">), distance_meters: 0 });
     },
@@ -191,12 +221,12 @@ interface SalonServiceRow {
   categories?: { name: string | null } | Array<{ name: string | null }> | null;
 }
 
-export function useSalonServices(businessId?: string) {
+export function useTiffinMealPlans(businessId?: string) {
   return useQuery({
-    queryKey: ["salon-services", businessId],
+    queryKey: ["tiffin-meal-plans", businessId],
     queryFn: async () => {
       if (!businessId) return [];
-      if (!isSupabaseConfigured || businessId.startsWith("salon-")) return salonServices;
+      if (!isSupabaseConfigured || businessId.startsWith("tiffin-") || businessId.startsWith("salon-")) return mealPlans;
 
       const { data, error } = await supabase
         .from("salon_services")
@@ -208,19 +238,30 @@ export function useSalonServices(businessId?: string) {
 
       if (error) throw error;
 
-      return ((data ?? []) as unknown as SalonServiceRow[]).map((service): SalonService => {
+      return ((data ?? []) as unknown as SalonServiceRow[]).map((service): MealPlan => {
         const category = Array.isArray(service.categories) ? service.categories[0] : service.categories;
         return {
           id: service.id,
           name: service.name,
           price: Number(service.price ?? 0),
-          duration: service.duration_minutes ? `${service.duration_minutes} min` : "Ask salon",
-          category: category?.name || "Service",
+          duration: service.duration_minutes ? `${service.duration_minutes} days` : "Ask provider",
+          category: category?.name || "Meal Plan",
         };
       });
     },
     staleTime: 1000 * 60 * 5,
   });
+}
+
+export const useSalonServices = useTiffinMealPlans;
+
+function filterByManualLocation(businesses: Business[], locationTerm?: string) {
+  if (!locationTerm) return businesses;
+  return businesses.filter((business) =>
+    [business.area, business.city, business.address]
+      .filter(Boolean)
+      .some((value) => value.toLowerCase().includes(locationTerm)),
+  );
 }
 
 interface ProductRow {

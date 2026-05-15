@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarClock, MessageCircle, Phone, ShoppingBasket, Utensils, Check, Clock3, MapPin, X, Plus } from "lucide-react";
+import { MessageCircle, Phone, ShoppingBasket, Utensils, Check, Clock3, MapPin, X, Plus, Soup } from "lucide-react";
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { foodMenuItems, kiranaProducts, salonServices } from "../../lib/mockData";
+import { foodMenuItems, kiranaProducts, mealPlans } from "../../lib/mockData";
 import { supabase } from "../../lib/supabase";
-import type { Business, FoodMenuItem, KiranaProduct, SalonService } from "../../lib/types";
+import type { Business, FoodMenuItem, KiranaProduct, MealPlan } from "../../lib/types";
 import { generateWhatsAppLink } from "../../lib/whatsapp";
 import { createWhatsAppBookingLead, createWhatsAppFoodLead, createWhatsAppOrderLead } from "../../services/leads";
 import { Button } from "../ui/button";
@@ -17,9 +17,11 @@ import { cn } from "../../lib/utils";
 const bookingSchema = z.object({
   customerName: z.string().min(2, "Name is required"),
   customerPhone: z.string().min(10, "Enter a valid phone number"),
-  serviceName: z.string().min(1, "Select a service"),
-  preferredDate: z.string().min(1, "Preferred date is required"),
-  preferredTime: z.string().min(1, "Preferred time is required"),
+  address: z.string().min(8, "Delivery address is required"),
+  mealPreference: z.enum(["Breakfast", "Lunch", "Dinner", "Full day"]),
+  planType: z.enum(["Trial", "Daily", "Weekly", "Monthly"]),
+  foodPreference: z.enum(["Veg", "Non-veg"]),
+  startDate: z.string().min(1, "Start date is required"),
   note: z.string().optional(),
 });
 
@@ -60,120 +62,127 @@ function FieldError({ message }: { message?: string }) {
   return <p className="mt-1 text-xs font-bold text-red-600">{message}</p>;
 }
 
-export function BookingWhatsAppForm({ salon, services = salonServices }: { salon: Business; services?: SalonService[] }) {
-  const availableServices = services.length ? services : salonServices;
-  const [selectedService, setSelectedService] = useState<SalonService>(availableServices[0]);
+export function TiffinWhatsAppOrderForm({ provider, plans = mealPlans }: { provider: Business; plans?: MealPlan[] }) {
+  const availablePlans = plans.length ? plans : mealPlans;
+  const [selectedPlan, setSelectedPlan] = useState<MealPlan>(availablePlans[0]);
   const [warning, setWarning] = useState("");
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       customerName: "",
       customerPhone: "",
-      serviceName: availableServices[0]?.name || "",
-      preferredDate: "",
-      preferredTime: "",
+      address: "",
+      mealPreference: "Lunch",
+      planType: "Trial",
+      foodPreference: "Veg",
+      startDate: "",
       note: "",
     },
   });
 
   const onSubmit = async (values: BookingFormValues) => {
-    const message = `Hello ${salon.name},
-I want to book a salon appointment.
+    const message = `Hello ${provider.name},
+I want to enquire/order tiffin service.
 
 Name: ${values.customerName}
 Phone: ${values.customerPhone}
-Service: ${values.serviceName}
-Preferred Date: ${values.preferredDate}
-Preferred Time: ${values.preferredTime}
-Note: ${values.note || "No special note"}
+Address: ${values.address}
+Meal: ${values.mealPreference}
+Plan: ${values.planType}${selectedPlan?.name ? ` - ${selectedPlan.name}` : ""}
+Veg/Non-veg: ${values.foodPreference}
+Start date: ${values.startDate}
+Notes: ${values.note || "No special note"}
 
-Please confirm my booking.`;
+Please confirm price, availability, and delivery time.`;
 
     try {
       const result = await createWhatsAppBookingLead({
-        business_id: salon.id,
-        service_id: selectedService.id,
+        business_id: provider.id,
+        service_id: selectedPlan.id,
         customer_name: values.customerName,
         customer_phone: values.customerPhone,
-        preferred_date: values.preferredDate,
-        preferred_time: values.preferredTime,
+        preferred_date: values.startDate,
+        preferred_time: values.mealPreference,
         note: values.note || null,
         whatsapp_message: message,
+        selected_items: [{ plan: selectedPlan.name, meal: values.mealPreference, type: values.planType, food_preference: values.foodPreference, address: values.address }],
       });
       setWarning("");
       window.open(result.whatsapp_url, "_blank", "noopener,noreferrer");
     } catch {
       const { error } = await supabase.from("whatsapp_booking_leads").insert({
-        business_id: salon.id,
+        business_id: provider.id,
         customer_name: values.customerName,
         customer_phone: values.customerPhone,
-        preferred_date: values.preferredDate,
-        preferred_time: values.preferredTime,
+        preferred_date: values.startDate,
+        preferred_time: values.mealPreference,
         note: values.note || null,
         whatsapp_message: message,
+        selected_items: [{ plan: selectedPlan.name, meal: values.mealPreference, type: values.planType, food_preference: values.foodPreference, address: values.address }],
         metadata: {
-          service_name: values.serviceName,
-          service_id: selectedService.id,
-          source: "customer_salon_detail",
+          plan_name: selectedPlan.name,
+          plan_id: selectedPlan.id,
+          delivery_address: values.address,
+          plan_type: values.planType,
+          food_preference: values.foodPreference,
+          source: "customer_tiffin_detail",
         },
       });
 
-      setWarning(error ? "Lead save nahi ho paya, lekin aap WhatsApp par booking bhej sakte hain." : "");
-      window.open(generateWhatsAppLink(salon.whatsapp, message), "_blank", "noopener,noreferrer");
+      setWarning(error ? "Lead save nahi ho paya, lekin aap WhatsApp par enquiry bhej sakte hain." : "");
+      window.open(generateWhatsAppLink(provider.whatsapp, message), "_blank", "noopener,noreferrer");
     }
   };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-2xl shadow-emerald-950/5 md:p-8">
       <div className="mb-8 flex items-center gap-4">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-fuchsia-50 text-fuchsia-700 shadow-inner">
-          <CalendarClock className="h-7 w-7" />
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-700 shadow-inner">
+          <Soup className="h-7 w-7" />
         </span>
         <div>
-          <h2 className="text-2xl font-black text-slate-950">Book on WhatsApp</h2>
-          <p className="text-sm font-semibold text-slate-500">Shopkeeper will confirm your slot manually.</p>
+          <h2 className="text-2xl font-black text-slate-950">Order / enquire on WhatsApp</h2>
+          <p className="text-sm font-semibold text-slate-500">Provider confirms price, delivery and availability.</p>
         </div>
       </div>
 
       <div className="space-y-3">
-        <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Select Service</Label>
+        <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Select Meal Plan</Label>
         <div className="grid gap-3">
-          {availableServices.map((service) => {
-            const selected = selectedService.id === service.id;
+          {availablePlans.map((plan) => {
+            const selected = selectedPlan.id === plan.id;
             return (
               <button
                 type="button"
-                key={service.id}
+                key={plan.id}
                 onClick={() => {
-                  setSelectedService(service);
-                  form.setValue("serviceName", service.name, { shouldValidate: true });
+                  setSelectedPlan(plan);
                 }}
                 className={cn(
                   "group flex items-center justify-between rounded-2xl border p-4 text-left transition-all duration-300",
-                  selected ? "border-fuchsia-300 bg-fuchsia-50/50 shadow-md ring-2 ring-fuchsia-100" : "border-slate-100 bg-slate-50/50 hover:border-fuchsia-200"
+                  selected ? "border-orange-300 bg-orange-50/50 shadow-md ring-2 ring-orange-100" : "border-slate-100 bg-slate-50/50 hover:border-orange-200"
                 )}
               >
                 <div className="flex items-center gap-3">
-                   <div className={cn("h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors", selected ? "border-fuchsia-600 bg-fuchsia-600 text-white" : "border-slate-300 bg-white")}>
+                   <div className={cn("h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors", selected ? "border-orange-600 bg-orange-600 text-white" : "border-slate-300 bg-white")}>
                       {selected && <Check className="h-3 w-3 stroke-[4]" />}
                    </div>
                    <div>
-                    <span className="block font-black text-slate-950">{service.name}</span>
+                    <span className="block font-black text-slate-950">{plan.name}</span>
                     <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
                       <Clock3 className="h-3 w-3" />
-                      {service.duration}
+                      {plan.duration}
                     </span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="block font-black text-slate-950">Rs {service.price}</span>
+                  <span className="block font-black text-slate-950">Rs {plan.price}</span>
                 </div>
               </button>
             );
           })}
         </div>
       </div>
-      <FieldError message={form.formState.errors.serviceName?.message} />
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         <div className="space-y-2">
@@ -187,22 +196,48 @@ Please confirm my booking.`;
           <FieldError message={form.formState.errors.customerPhone?.message} />
         </div>
         <div className="space-y-2">
-          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Preferred date</Label>
-          <Input type="date" className="h-12 rounded-xl border-slate-200 bg-slate-50/50 focus:bg-white transition-colors" {...form.register("preferredDate")} />
-          <FieldError message={form.formState.errors.preferredDate?.message} />
+          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Meal</Label>
+          <select className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-sm font-semibold focus:bg-white" {...form.register("mealPreference")}>
+            <option>Breakfast</option>
+            <option>Lunch</option>
+            <option>Dinner</option>
+            <option>Full day</option>
+          </select>
         </div>
         <div className="space-y-2">
-          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Preferred time</Label>
-          <Input type="time" className="h-12 rounded-xl border-slate-200 bg-slate-50/50 focus:bg-white transition-colors" {...form.register("preferredTime")} />
-          <FieldError message={form.formState.errors.preferredTime?.message} />
+          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Plan type</Label>
+          <select className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-sm font-semibold focus:bg-white" {...form.register("planType")}>
+            <option>Trial</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Veg / Non-veg</Label>
+          <select className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-sm font-semibold focus:bg-white" {...form.register("foodPreference")}>
+            <option>Veg</option>
+            <option>Non-veg</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Start date</Label>
+          <Input type="date" className="h-12 rounded-xl border-slate-200 bg-slate-50/50 focus:bg-white transition-colors" {...form.register("startDate")} />
+          <FieldError message={form.formState.errors.startDate?.message} />
         </div>
       </div>
 
+      <div className="mt-5 space-y-2">
+        <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Delivery address</Label>
+        <Input className="h-12 rounded-xl border-slate-200 bg-slate-50/50 focus:bg-white transition-colors" placeholder="House no, street, landmark" {...form.register("address")} />
+        <FieldError message={form.formState.errors.address?.message} />
+      </div>
+
       <div className="mt-6 space-y-2">
-        <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Special Note</Label>
+        <Label className="text-xs font-black uppercase tracking-widest text-slate-400">Notes</Label>
         <textarea
-          className="min-h-24 w-full rounded-xl border border-slate-200 bg-slate-50/50 p-4 text-sm font-semibold outline-none transition-all focus:border-fuchsia-300 focus:bg-white focus:ring-4 focus:ring-fuchsia-100 placeholder:text-slate-400"
-          placeholder="Any timing request or service note..."
+          className="min-h-24 w-full rounded-xl border border-slate-200 bg-slate-50/50 p-4 text-sm font-semibold outline-none transition-all focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100 placeholder:text-slate-400"
+          placeholder="Preferred delivery time, spice level, allergies, number of people..."
           {...form.register("note")}
         />
       </div>
@@ -212,7 +247,7 @@ Please confirm my booking.`;
       <div className="mt-8">
         <Button disabled={form.formState.isSubmitting} className="h-14 w-full rounded-2xl bg-[#16A34A] text-lg font-black text-white shadow-xl shadow-emerald-900/20 hover:bg-[#15803D] hover:scale-[1.02] active:scale-95 transition-all">
           <MessageCircle className="h-6 w-6" />
-          {form.formState.isSubmitting ? "Connecting..." : "Send Booking on WhatsApp"}
+          {form.formState.isSubmitting ? "Connecting..." : "Send Tiffin Enquiry"}
         </Button>
         <p className="mt-4 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
            Direct Connection • No Charges
@@ -221,6 +256,8 @@ Please confirm my booking.`;
     </form>
   );
 }
+
+export const BookingWhatsAppForm = TiffinWhatsAppOrderForm;
 
 export function KiranaWhatsAppOrderForm({ shop, products = kiranaProducts }: { shop: Business; products?: KiranaProduct[] }) {
   const [selected, setSelected] = useState<Record<string, number>>({});

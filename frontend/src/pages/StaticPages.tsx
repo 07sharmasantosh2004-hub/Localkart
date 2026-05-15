@@ -7,9 +7,9 @@ import { Button } from "../components/ui/button";
 const pageCopy = {
   about: {
     title: "About LocalKart",
-    description: "LocalKart helps customers discover nearby salons and kirana shops, then connect directly on WhatsApp.",
+    description: "LocalKart helps customers discover nearby tiffin services, food providers and kirana shops, then connect directly on WhatsApp.",
     body: [
-      "LocalKart is built for the way Indian neighbourhoods already work. A customer wants a haircut or monthly ration, the local shopkeeper knows the area, and WhatsApp is where confirmation naturally happens.",
+      "LocalKart is built for the way Indian neighbourhoods already work. A customer wants home food, monthly ration or a local meal, the shopkeeper knows the area, and WhatsApp is where confirmation naturally happens.",
       "We do not add a payment layer or commission checkout in the MVP. Customers send clear details, and the shopkeeper confirms timing, availability, delivery and payment directly on WhatsApp.",
     ],
   },
@@ -23,7 +23,7 @@ const pageCopy = {
   },
   terms: {
     title: "Terms and Conditions",
-    description: "Terms for customers, salon owners and kirana shopkeepers using LocalKart.",
+    description: "Terms for customers, tiffin providers, food shops and kirana shopkeepers using LocalKart.",
     body: [
       "LocalKart is a discovery and WhatsApp lead platform. The final booking, order confirmation, delivery, service quality and payment are handled between the customer and shopkeeper.",
       "Delivery depends on shop availability, area, timing and manual confirmation. We do not promise instant delivery or guaranteed lowest prices.",
@@ -74,8 +74,8 @@ export function FAQPage() {
     <>
       <SEOHead
         config={{
-          title: "LocalKart FAQ | WhatsApp Salon Booking and Kirana Ordering",
-          description: "Common questions about LocalKart, WhatsApp booking, kirana ordering, delivery confirmation and free shop listings.",
+          title: "LocalKart FAQ | WhatsApp Tiffin, Food and Kirana Ordering",
+          description: "Common questions about LocalKart, WhatsApp ordering, kirana ordering, delivery confirmation and free shop listings.",
           jsonLd: {
             "@context": "https://schema.org",
             "@type": "FAQPage",

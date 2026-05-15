@@ -43,7 +43,7 @@ export default function InstallPrompt() {
         <div className="min-w-0">
           <h2 className="font-black text-slate-950">Install LocalKart</h2>
           <p className="mt-1 text-sm leading-5 text-slate-600">
-            Add LocalKart to your phone for quick salon booking and kirana ordering on WhatsApp.
+            Add LocalKart to your phone for quick tiffin, kirana and food ordering on WhatsApp.
           </p>
           <div className="mt-3 flex gap-2">
             <Button type="button" className="h-10 rounded-xl bg-emerald-700 font-black" onClick={() => void install()}>

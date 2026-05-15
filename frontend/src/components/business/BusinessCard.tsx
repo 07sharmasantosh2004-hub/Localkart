@@ -1,1 +1,1 @@
-export { BusinessCard, FoodCard, KiranaCard, SalonCard } from "../marketplace";
+export { BusinessCard, FoodCard, KiranaCard, TiffinCard } from "../marketplace";

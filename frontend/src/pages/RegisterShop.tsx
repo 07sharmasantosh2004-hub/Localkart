@@ -8,11 +8,11 @@ export default function RegisterShop() {
     <>
       <SEOHead
         config={{
-          title: "Register Your Salon or Kirana Shop Free | Get Customers on WhatsApp",
+          title: "Register Your Tiffin Service or Local Shop Free | Get Customers on WhatsApp",
           description:
-            "List your salon or kirana shop for free and receive local customer bookings and orders directly on WhatsApp without commission.",
+            "List your tiffin service, cloud kitchen, kirana shop or food business for free and receive local customer orders directly on WhatsApp without commission.",
           keywords:
-            "free shop listing, register kirana shop online, register salon online, local business listing, get customers on WhatsApp, small business promotion, free local marketplace",
+            "free shop listing, register tiffin service online, register kirana shop online, local business listing, get customers on WhatsApp, small business promotion, free local marketplace",
         }}
       />
 
@@ -74,7 +74,7 @@ export default function RegisterShop() {
                <SectionHeader
                 eyebrow="Simple Process"
                 title="List your shop in 2 minutes"
-                text="Customers nearby can find your listing after approval and send bookings or orders directly to your WhatsApp number."
+                text="Customers nearby can find your listing after approval and send enquiries or orders directly to your WhatsApp number."
               />
             </div>
             

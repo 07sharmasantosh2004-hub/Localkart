@@ -8,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
-import { MessageCircle, ShieldCheck, ArrowRight, Scissors, ShoppingBasket, Utensils } from 'lucide-react';
+import { MessageCircle, ShieldCheck, ArrowRight, Soup, ShoppingBasket, Utensils } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -54,7 +54,7 @@ export default function Login() {
             <div className="text-center">
                <span className="text-3xl font-black text-slate-950 tracking-tighter">Local<span className="text-emerald-700">Kart</span></span>
                <div className="mt-2 flex items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-[#F59E0B]">
-                  <Scissors className="h-3.5 w-3.5" />
+                  <Soup className="h-3.5 w-3.5" />
                   <ShoppingBasket className="h-3.5 w-3.5" />
                   <Utensils className="h-3.5 w-3.5" />
                </div>

@@ -7,7 +7,7 @@ import {
   MessageCircle,
   PackagePlus,
   Plus,
-  Scissors,
+  Soup,
   Star,
   Store,
   Utensils,
@@ -37,7 +37,7 @@ import { cn } from "../../lib/utils";
 
 interface PartnerBusiness {
   id: string;
-  type: "salon" | "kirana" | "food";
+  type: "tiffin" | "kirana" | "food";
   name: string;
   status: "draft" | "pending" | "approved" | "rejected" | "blocked";
   description: string | null;
@@ -69,7 +69,7 @@ interface BookingLead {
   note: string | null;
   whatsapp_message: string;
   created_at: string;
-  metadata?: { service_name?: string };
+  metadata?: { plan_name?: string; service_name?: string };
 }
 
 interface OrderLead {
@@ -179,7 +179,7 @@ export function PartnerLayout() {
     { label: "Overview", to: "/partner", icon: BarChart3 },
     { label: "Onboarding", to: "/partner/onboarding", icon: Store },
     { label: "Shop Profile", to: "/partner/business", icon: Home },
-    { label: "Services", to: "/partner/salon/services", icon: Scissors, hide: business?.type !== "salon" },
+    { label: "Meal Plans", to: "/partner/tiffin/meal-plans", icon: Soup, hide: business?.type !== "tiffin" },
     { label: "Products", to: "/partner/kirana/products", icon: PackagePlus, hide: business?.type !== "kirana" },
     { label: "Food Menu", to: "/partner/food/menu", icon: Utensils, hide: business?.type !== "food" },
     { label: "Timings", to: "/partner/timings", icon: Clock3 },
@@ -210,7 +210,7 @@ export function PartnerLayout() {
                 Local<span className="text-emerald-700">Kart</span>
               </span>
               <div className="mt-1 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#F59E0B]">
-                <Scissors className="h-3 w-3" />
+                <Soup className="h-3 w-3" />
                 <ShoppingBasket className="h-3 w-3" />
                 <Utensils className="h-3 w-3" />
                 <span className="text-slate-400">Partner Studio</span>
@@ -277,7 +277,7 @@ export function PartnerDashboard() {
     return (
       <EmptyStateBlock
         title="No shop listing yet"
-        text="Register your salon, kirana or local food shop first. Approval ke baad customers WhatsApp par direct contact karenge."
+        text="Register your tiffin service, kirana or local food shop first. Approval ke baad customers WhatsApp par direct contact karenge."
         action={{ label: "Register shop", onClick: () => window.location.assign("/register-shop") }}
       />
     );
@@ -286,7 +286,7 @@ export function PartnerDashboard() {
   const cards = [
     { label: "Shop Status", value: business.status, icon: Store, color: "text-blue-600", bg: "bg-blue-50" },
     { label: "Profile Completion", value: `${profileCompletion(business)}%`, icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "Salon Leads", value: String(bookings.data?.length || 0), icon: Scissors, color: "text-fuchsia-600", bg: "bg-fuchsia-50" },
+    { label: "Tiffin Enquiries", value: String(bookings.data?.length || 0), icon: Soup, color: "text-orange-600", bg: "bg-orange-50" },
     { label: "Kirana Leads", value: String(orders.data?.length || 0), icon: ShoppingBasket, color: "text-amber-600", bg: "bg-amber-50" },
     { label: "Food Leads", value: String(foodLeads.data?.length || 0), icon: Utensils, color: "text-orange-600", bg: "bg-orange-50" },
     { label: "Avg Rating", value: `${business.rating_avg || 0}/5`, icon: Star, color: "text-yellow-600", bg: "bg-yellow-50" },
@@ -523,7 +523,7 @@ export function PartnerServicesPage() {
   });
 
   return (
-    <FormShell title="Salon services" text="Add haircut, shave, facial, grooming packages. Customers select service before WhatsApp booking.">
+    <FormShell title="Tiffin meal plans" text="Add trial meals, daily meals, weekly and monthly tiffin plans. Customers select a plan before WhatsApp enquiry.">
       <form className="grid gap-4 md:grid-cols-4 mb-10" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
         <TextInput label="Service name" register={form.register("name")} />
         <TextInput label="Price (Rs)" register={form.register("price")} />
@@ -800,12 +800,12 @@ function LatestLeads({ business }: { business: PartnerBusiness }) {
   const orders = usePartnerOrderLeads(business.id);
   const foodLeads = usePartnerFoodLeads(business.id);
   const rows =
-    business.type === "salon"
+    business.type === "tiffin"
       ? (bookings.data || []).map((lead) => ({
           id: lead.id,
           name: lead.customer_name,
           phone: lead.customer_phone,
-          detail: lead.metadata?.service_name || lead.note || "Salon booking",
+          detail: lead.metadata?.plan_name || lead.metadata?.service_name || lead.note || "Tiffin enquiry",
           message: lead.whatsapp_message,
           created: lead.created_at,
         }))
@@ -852,7 +852,7 @@ function LatestLeads({ business }: { business: PartnerBusiness }) {
            </div>
            <div className="flex gap-2">
               <Button asChild size="sm" className="h-10 rounded-xl bg-[#25D366] font-black text-white hover:bg-[#128C7E] flex-1">
-                 <a href={generateWhatsAppLink(lead.phone, "Hello " + lead.name + ", we received your LocalKart booking request...")} target="_blank" rel="noreferrer">
+                 <a href={generateWhatsAppLink(lead.phone, "Hello " + lead.name + ", we received your LocalKart tiffin enquiry...")} target="_blank" rel="noreferrer">
                     <MessageCircle className="h-4 w-4" /> Reply on WhatsApp
                  </a>
               </Button>

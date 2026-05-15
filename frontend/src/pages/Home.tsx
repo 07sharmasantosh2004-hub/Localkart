@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { BadgeIndianRupee, Scissors, ShoppingBasket, Store, Utensils, ExternalLink, Check, Users } from "lucide-react";
-import { customerFaqs, foodShops, salons } from "../lib/mockData";
+import { BadgeIndianRupee, Soup, ShoppingBasket, Store, Utensils, ExternalLink, Check, Users } from "lucide-react";
+import { customerFaqs, foodShops, tiffinProviders } from "../lib/mockData";
 import {
   HeroSection,
   CategoryCard,
@@ -8,7 +8,7 @@ import {
   FAQAccordion,
   FoodCard,
   HowItWorks,
-  SalonCard,
+  TiffinCard,
   SEOHead,
   SectionHeader,
   TrustBadges,
@@ -18,7 +18,7 @@ import { useNearbyBusinesses } from "../lib/businesses";
 import { useFaqs } from "../services/cms";
 
 export default function Home() {
-  const { data: homeSalons = salons } = useNearbyBusinesses({ type: "salon", radiusKm: 10 });
+  const { data: homeTiffins = tiffinProviders } = useNearbyBusinesses({ type: "tiffin", radiusKm: 10 });
   const { data: homeFoodShops = foodShops } = useNearbyBusinesses({ type: "food", radiusKm: 10 });
   const { data: faqs = [] } = useFaqs("customer");
   const visibleFaqs = faqs.length ? faqs : customerFaqs;
@@ -27,21 +27,21 @@ export default function Home() {
     <>
       <SEOHead
         config={{
-          title: "Nearby Salons & Kirana Shops on WhatsApp | Free Local Booking & Ordering",
+          title: "Nearby Tiffin Services & Cloud Kitchens | Direct WhatsApp Ordering",
           description:
-            "Find nearby salons, kirana shops, cafes and local food shops. Book appointments or send orders directly on WhatsApp without extra platform charges.",
+            "Find nearby tiffin services, home food providers, kirana shops, cafes and local food shops. Send orders directly on WhatsApp without extra platform charges.",
           keywords:
-            "nearby salon booking, kirana home delivery, local shops near me, order grocery on WhatsApp, salon booking on WhatsApp, nearby kirana store, no extra charge grocery delivery, local dukandaar app, free shop listing, local business marketplace",
+            "tiffin service near me, home food near me, cloud kitchen near me, monthly tiffin plan, kirana home delivery, local shops near me, order grocery on WhatsApp",
           jsonLd: [
             {
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: "LocalKart",
               description:
-                "Hyperlocal platform connecting customers with nearby salons and kirana shops directly on WhatsApp.",
+                "Hyperlocal platform connecting customers with nearby tiffin services, kirana shops and food providers directly on WhatsApp.",
               hasOfferCatalog: {
                 "@type": "OfferCatalog",
-                name: "Salon, Kirana and Local Food WhatsApp leads",
+                name: "Tiffin, Kirana and Local Food WhatsApp leads",
               },
             },
             {
@@ -71,12 +71,12 @@ export default function Home() {
           />
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             <CategoryCard
-              title="Salon Booking"
-              text="Skip the queue. Connect with nearby salons and book your preferred time directly on WhatsApp."
-              cta="Explore Salons"
-              to="/salons"
-              tone="salon"
-              icon={<Scissors className="h-8 w-8 text-fuchsia-700" />}
+              title="Tiffin Services"
+              text="Find nearby home food providers, trial meals and monthly tiffin plans directly on WhatsApp."
+              cta="Find Tiffin Services"
+              to="/tiffin-services"
+              tone="tiffin"
+              icon={<Soup className="h-8 w-8 text-emerald-700" />}
             />
             <CategoryCard
               title="Kirana Store"
@@ -102,19 +102,19 @@ export default function Home() {
         <section>
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <SectionHeader
-              eyebrow="Nearby salons"
-              title="Book a salon slot before you leave home"
-              text="Haircut, shave, facial ya grooming - pick your nearby salon and send details directly to the owner."
+              eyebrow="Nearby tiffin services"
+              title="Home food and meal plans near you"
+              text="Breakfast, lunch, dinner, trial meal or monthly plan - pick a nearby provider and send details directly on WhatsApp."
             />
             <Button asChild variant="link" className="h-auto p-0 text-lg font-black text-emerald-800">
-              <Link to="/salons" className="flex items-center gap-2">
-                View all salons <ExternalLink className="h-5 w-5" />
+              <Link to="/tiffin-services" className="flex items-center gap-2">
+                View all tiffin services <ExternalLink className="h-5 w-5" />
               </Link>
             </Button>
           </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {homeSalons.slice(0, 6).map((salon) => (
-              <SalonCard key={salon.id} salon={salon} />
+            {homeTiffins.slice(0, 6).map((provider) => (
+              <TiffinCard key={provider.id} provider={provider} />
             ))}
           </div>
         </section>
@@ -126,10 +126,10 @@ export default function Home() {
                 For local shopkeepers
               </div>
               <h2 className="text-3xl font-black tracking-tight sm:text-5xl md:text-6xl">
-                Own a salon, kirana or food shop?
+                Own a tiffin service, kirana or food shop?
               </h2>
               <p className="max-w-2xl text-lg leading-8 text-emerald-50/80 sm:text-xl">
-                Apna salon, kirana, café, Chinese corner, momo shop, bakery ya local food business free mein list karein aur direct WhatsApp leads paayen.
+                Apna tiffin service, cloud kitchen, kirana, cafe, Chinese corner, momo shop, bakery ya local food business free mein list karein aur direct WhatsApp leads paayen.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                 {["Free Listing", "Zero Commission", "Direct WhatsApp Contacts", "Local Visibility"].map((tag) => (
@@ -226,7 +226,7 @@ export default function Home() {
               </p>
             </div>
             <Button asChild size="lg" className="h-14 rounded-2xl bg-amber-600 px-8 font-black text-white hover:bg-amber-700">
-              <Link to="/salon-booking/bengaluru">Explore city pages</Link>
+              <Link to="/tiffin-service/your-city">Explore city pages</Link>
             </Button>
           </div>
         </section>
@@ -235,10 +235,10 @@ export default function Home() {
           <SectionHeader eyebrow="Popular city links" title="Explore LocalKart by city" />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["/salon-booking/bengaluru", "Salon booking in Bengaluru"],
-              ["/kirana-delivery/bengaluru", "Kirana delivery in Bengaluru"],
-              ["/food-delivery/bengaluru", "Food shops in Bengaluru"],
-              ["/salon-booking/bengaluru/indiranagar", "Salons in Indiranagar"],
+              ["/tiffin-service/your-city", "Tiffin services in your city"],
+              ["/kirana-delivery/your-city", "Kirana delivery in your city"],
+              ["/food-delivery/your-city", "Food shops in your city"],
+              ["/tiffin-services/city/your-city/your-area", "Home food in your area"],
             ].map(([to, label]) => (
               <Link key={to} to={to} className="group flex items-center justify-between rounded-2xl border border-slate-100 bg-white p-5 text-sm font-black text-slate-800 shadow-sm transition-all hover:border-emerald-200 hover:bg-emerald-50">
                 {label}

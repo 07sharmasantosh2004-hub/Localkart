@@ -4,12 +4,15 @@ import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './providers/AuthProvider.tsx'
+import { LocationProvider } from './context/LocationContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
       <AuthProvider>
-        <App />
+        <LocationProvider>
+          <App />
+        </LocationProvider>
       </AuthProvider>
     </HelmetProvider>
   </StrictMode>,

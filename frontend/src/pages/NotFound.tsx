@@ -9,7 +9,7 @@ export default function NotFound() {
       <SEOHead
         config={{
           title: "Page Not Found | LocalKart",
-          description: "This LocalKart page was not found. Explore nearby salons, kirana shops, or register your shop for free.",
+          description: "This LocalKart page was not found. Explore nearby tiffin services, kirana shops, or register your shop for free.",
           canonical: "/404",
           jsonLd: {
             "@context": "https://schema.org",
@@ -26,7 +26,7 @@ export default function NotFound() {
           <Search className="mx-auto h-12 w-12 text-emerald-700" />
           <h1 className="mt-4 text-4xl font-black text-slate-950">Page nahi mila</h1>
           <p className="mt-3 leading-7 text-slate-600">
-            This page may have moved. You can still find nearby salons, kirana shops, or list your shop free on LocalKart.
+            This page may have moved. You can still find nearby tiffin services, kirana shops, or list your shop free on LocalKart.
           </p>
           <Button asChild className="mt-6 rounded-2xl bg-emerald-700 font-black">
             <Link to="/">

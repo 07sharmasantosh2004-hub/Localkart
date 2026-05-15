@@ -18,9 +18,16 @@ export interface Business {
   description?: string;
   category?: string;
   popular_items?: string[];
+  meal_types?: string[];
+  cuisines?: string[];
+  veg_available?: boolean;
+  non_veg_available?: boolean;
+  monthly_plan_available?: boolean;
+  trial_meal_available?: boolean;
 }
 
-export type BusinessType = 'salon' | 'kirana' | 'food';
+export type BusinessType = 'tiffin' | 'kirana' | 'food';
+export type DatabaseBusinessType = BusinessType | 'salon';
 
 export interface AdUnit {
   id: string;
@@ -30,13 +37,18 @@ export interface AdUnit {
   is_active: boolean;
 }
 
-export interface SalonService {
+export interface MealPlan {
   id: string;
   name: string;
   price: number;
   duration: string;
   category: string;
+  description?: string;
+  is_veg?: boolean;
+  includes?: string[];
 }
+
+export type SalonService = MealPlan;
 
 export interface KiranaProduct {
   id: string;

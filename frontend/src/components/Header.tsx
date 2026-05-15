@@ -1,15 +1,23 @@
 import { Link } from "react-router-dom";
-import { ChevronDown, MapPin, Menu, Search, Store, UserCircle, Utensils, Scissors, ShoppingBasket } from "lucide-react";
+import { ChevronDown, LocateFixed, MapPin, Menu, Search, Store, UserCircle, Utensils, ShoppingBasket, Soup } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useAuth } from "../hooks/useAuth";
 import { cn } from "../lib/utils";
+import { useLocationContext } from "../context/LocationContext";
+import { Input } from "./ui/input";
 
 export default function Header() {
   const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [manualLocation, setManualLocation] = useState("");
+  const locationState = useLocationContext();
   const userPath = user ? "/profile" : "/login";
+  const saveManualLocation = () => {
+    locationState.saveManualLocation(manualLocation);
+    setManualLocation("");
+  };
 
   return (
     <header className="sticky top-0 z-[60] border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
@@ -30,8 +38,8 @@ export default function Header() {
               Local<span className="text-[#064E3B]">Kart</span>
             </span>
             <div className="mt-1 hidden items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#F59E0B] sm:flex">
-              <Scissors className="h-3 w-3" />
-              <span>Salon</span>
+              <Soup className="h-3 w-3" />
+              <span>Tiffin</span>
               <span className="h-1 w-1 rounded-full bg-slate-300" />
               <ShoppingBasket className="h-3 w-3" />
               <span>Kirana</span>
@@ -44,20 +52,25 @@ export default function Header() {
 
         <div className="hidden lg:flex items-center gap-4 ml-4">
           <div className="h-10 w-px bg-slate-200" />
-          <button type="button" className="flex items-center gap-2 rounded-2xl bg-slate-100/50 px-4 py-2 text-sm font-bold text-slate-600 transition hover:bg-slate-100" aria-label="Change current location">
+          <button
+            type="button"
+            onClick={locationState.openManualLocation}
+            className="flex max-w-64 items-center gap-2 rounded-2xl bg-slate-100/50 px-4 py-2 text-sm font-bold text-slate-600 transition hover:bg-slate-100"
+            aria-label="Change current location"
+          >
             <MapPin className="h-4 w-4 text-emerald-700" />
-            <span>Indiranagar, Bengaluru</span>
+            <span className="truncate">{locationState.loading ? "Detecting location..." : locationState.displayLabel}</span>
             <ChevronDown className="h-4 w-4" />
           </button>
         </div>
 
         <div className="group relative order-3 mx-auto w-full flex-none md:order-none md:max-w-2xl md:flex-1">
-          <label htmlFor="site-search" className="sr-only">Search salons, kirana or food</label>
+          <label htmlFor="site-search" className="sr-only">Search tiffin services, kirana or food</label>
           <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-700" />
           <input
             id="site-search"
             type="text"
-            placeholder="Search salons, kirana or food..."
+            placeholder="Search tiffin, kirana or food..."
             autoComplete="off"
             className="h-12 w-full rounded-[1.25rem] border border-slate-200 bg-slate-50 pl-12 pr-4 text-sm font-semibold outline-none transition-all focus:border-emerald-200 focus:bg-white focus:ring-4 focus:ring-emerald-100"
           />
@@ -66,7 +79,7 @@ export default function Header() {
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           <nav className="hidden xl:flex items-center gap-2 mr-2">
              {[
-               { to: "/salons", label: "Salons", icon: Scissors },
+               { to: "/tiffin-services", label: "Tiffin", icon: Soup },
                { to: "/kirana", label: "Kirana", icon: ShoppingBasket },
                { to: "/food", label: "Food", icon: Utensils },
              ].map((link) => (
@@ -107,12 +120,67 @@ export default function Header() {
           <div className="p-3 border-b border-slate-100 mb-2">
             <p className="text-xs font-black uppercase tracking-widest text-slate-400">Main Menu</p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMenuOpen(false);
+              locationState.openManualLocation();
+            }}
+            className="flex w-full items-center gap-4 rounded-[1.5rem] p-4 text-left transition-all duration-300 hover:bg-slate-50"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+              <MapPin className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="block text-sm font-black text-slate-950">Location</span>
+              <span className="block truncate text-[10px] font-bold uppercase tracking-tight text-slate-500">{locationState.displayLabel}</span>
+            </div>
+          </button>
           <MenuLink to={userPath} icon={UserCircle} label="My Profile" desc="Account, orders & favorites" onClick={() => setMenuOpen(false)} />
           <MenuLink to="/register-shop" icon={Store} label="List Your Shop" desc="Grow your local business" onClick={() => setMenuOpen(false)} tone="emerald" />
           <MenuLink to="/partner" icon={Store} label="Partner Dashboard" desc="Manage leads & listings" onClick={() => setMenuOpen(false)} />
           <div className="mt-2 pt-2 border-t border-slate-100">
              <MenuLink to="/about" label="About Us" onClick={() => setMenuOpen(false)} />
              <MenuLink to="/contact" label="Contact Support" onClick={() => setMenuOpen(false)} />
+          </div>
+        </div>
+      )}
+      {locationState.manualModalOpen && (
+        <div className="fixed inset-0 z-[90] flex items-end bg-slate-950/50 p-3 backdrop-blur-sm sm:items-center sm:justify-center" role="dialog" aria-modal="true" aria-labelledby="location-dialog-title">
+          <div className="w-full rounded-[2rem] bg-white p-5 shadow-2xl sm:max-w-md sm:p-6">
+            <div className="flex items-start gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                <MapPin className="h-5 w-5" />
+              </span>
+              <div>
+                <h2 id="location-dialog-title" className="text-xl font-black text-slate-950">Choose your location</h2>
+                <p className="mt-1 text-sm leading-6 text-slate-600">Use GPS for nearby results, or enter city, area or pincode manually.</p>
+              </div>
+            </div>
+            {locationState.error ? <p className="mt-4 rounded-2xl bg-amber-50 p-3 text-sm font-bold text-amber-800">{locationState.error}</p> : null}
+            <div className="mt-5 grid gap-3">
+              <Button type="button" className="h-12 rounded-2xl bg-emerald-700 font-black hover:bg-emerald-800" onClick={() => void locationState.requestCurrentLocation()} disabled={locationState.loading}>
+                <LocateFixed className="h-4 w-4" />
+                {locationState.loading ? "Detecting..." : "Use current location"}
+              </Button>
+              <div className="grid gap-2">
+                <label htmlFor="manual-location" className="text-xs font-black uppercase tracking-widest text-slate-500">City, area or pincode</label>
+                <Input
+                  id="manual-location"
+                  value={manualLocation}
+                  onChange={(event) => setManualLocation(event.target.value)}
+                  placeholder="Example: Pune, Kothrud or 411038"
+                  className="h-12 rounded-2xl"
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") saveManualLocation();
+                  }}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" className="h-11 flex-1 rounded-xl font-black" onClick={locationState.closeManualLocation}>Cancel</Button>
+                <Button type="button" className="h-11 flex-1 rounded-xl bg-slate-950 font-black text-white hover:bg-slate-800" onClick={saveManualLocation}>Save</Button>
+              </div>
+            </div>
           </div>
         </div>
       )}

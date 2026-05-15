@@ -17,7 +17,7 @@ export default function Food() {
   const [delivery, setDelivery] = useState(false);
   const [distance, setDistance] = useState("15");
   const [cuisine, setCuisine] = useState("All");
-  const { location, error: locationError } = useGeolocation();
+  const { location, error: locationError, searchTerm } = useGeolocation();
   const {
     data: nearbyShops = foodShops,
     isLoading,
@@ -27,6 +27,7 @@ export default function Food() {
     lat: location?.lat,
     lng: location?.lng,
     radiusKm: Number(distance),
+    searchLocation: searchTerm,
   });
 
   const filteredShops = useMemo(

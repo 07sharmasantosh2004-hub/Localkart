@@ -42,7 +42,7 @@ import {
 } from "../components/ui/dialog";
 import { EmptyStateBlock, ErrorStateBlock, SkeletonCard } from "../components/feedback";
 
-type BusinessType = "salon" | "kirana" | "food";
+type BusinessType = "tiffin" | "kirana" | "food";
 type BusinessStatus = "draft" | "pending" | "approved" | "rejected" | "blocked";
 type ProfileRole = "customer" | "owner" | "admin";
 
@@ -360,7 +360,7 @@ export default function AdminPage() {
       {toast ? <Toast toast={toast} /> : null}
       {current === "dashboard" ? <Dashboard notify={notify} /> : null}
       {current === "approvals" ? <Approvals notify={notify} /> : null}
-      {current === "salons" ? <BusinessManager type="salon" notify={notify} /> : null}
+      {current === "tiffin-services" ? <BusinessManager type="tiffin" notify={notify} /> : null}
       {current === "kirana" || current === "kirana-shops" ? <BusinessManager type="kirana" notify={notify} /> : null}
       {current === "food-shops" ? <BusinessManager type="food" notify={notify} /> : null}
       {current === "users" ? <UsersManager notify={notify} /> : null}
@@ -455,7 +455,7 @@ function BusinessManager({ type, notify }: { type: BusinessType; notify: (toast:
 
   return (
     <Panel
-      title={type === "salon" ? "Manage salons" : type === "food" ? "Manage food shops" : "Manage kirana shops"}
+      title={type === "tiffin" ? "Manage tiffin services" : type === "food" ? "Manage food shops" : "Manage kirana shops"}
       description="Search, filter, edit, view items and mark listings featured."
       action={
         <div className="flex flex-wrap gap-2">
@@ -536,15 +536,15 @@ function UsersManager({ notify }: { notify: (toast: ToastState) => void }) {
 }
 
 function CategoriesManager({ notify }: { notify: (toast: ToastState) => void }) {
-  const salonCategories = useCategories();
+  const tiffinCategories = useCategories();
   const productCategories = useProductCategories();
   const foodCategories = useFoodCategories();
 
   return (
     <div className="grid gap-5 xl:grid-cols-3">
       <CategoryPanel
-        title="Salon service categories"
-        rows={salonCategories.data || []}
+        title="Tiffin meal plan categories"
+        rows={tiffinCategories.data || []}
         table="categories"
         queryKey="admin-categories"
         notify={notify}
@@ -568,7 +568,7 @@ function CategoriesManager({ notify }: { notify: (toast: ToastState) => void }) 
 }
 
 function LeadsManager({ notify }: { notify: (toast: ToastState) => void }) {
-  const [type, setType] = useState<"bookings" | "orders" | "food">("bookings");
+  const [type, setType] = useState<"tiffin" | "orders" | "food">("tiffin");
   const [date, setDate] = useState("");
   const bookingLeads = useBookingLeads();
   const orderLeads = useOrderLeads();
@@ -576,7 +576,7 @@ function LeadsManager({ notify }: { notify: (toast: ToastState) => void }) {
   const businesses = useBusinesses({});
   const businessMap = useMemo(() => new Map((businesses.data || []).map((item) => [item.id, item])), [businesses.data]);
   const rows: AdminLead[] =
-    type === "bookings"
+    type === "tiffin"
       ? (bookingLeads.data || []).filter((lead) => !date || lead.created_at.startsWith(date))
       : type === "orders"
         ? (orderLeads.data || []).filter((lead) => !date || lead.created_at.startsWith(date))
@@ -604,10 +604,10 @@ function LeadsManager({ notify }: { notify: (toast: ToastState) => void }) {
   return (
     <Panel
       title="WhatsApp leads"
-      description="Booking and order leads saved before WhatsApp redirect."
+      description="Enquiry and order leads saved before WhatsApp redirect."
       action={
         <div className="flex flex-wrap gap-2">
-          <Select value={type} onChange={(value) => setType(value as "bookings" | "orders" | "food")} options={["bookings", "orders", "food"]} />
+          <Select value={type} onChange={(value) => setType(value as "tiffin" | "orders" | "food")} options={["tiffin", "orders", "food"]} />
           <Input type="date" value={date} onChange={(event) => setDate(event.target.value)} className="h-10 w-40 rounded-xl" />
           <Button onClick={exportCsv} className="h-10 rounded-xl bg-emerald-700 font-black"><Download className="h-4 w-4" /> Export CSV</Button>
         </div>
@@ -921,7 +921,7 @@ function useAdminStats() {
         users,
         businesses,
         pending,
-        salons,
+        tiffin,
         kirana,
         food,
         pendingFood,
@@ -934,7 +934,7 @@ function useAdminStats() {
         countTable("profiles"),
         countTable("businesses"),
         countTable("businesses", "status", "pending"),
-        countBusinesses({ type: "salon", status: "approved" }),
+        countBusinesses({ type: "tiffin", status: "approved" }),
         countBusinesses({ type: "kirana", status: "approved" }),
         countBusinesses({ type: "food", status: "approved" }),
         countBusinesses({ type: "food", status: "pending" }),
@@ -949,11 +949,11 @@ function useAdminStats() {
         { label: "Total users", value: users, icon: Users },
         { label: "Total businesses", value: businesses, icon: Store },
         { label: "Pending approvals", value: pending, icon: ShieldCheck },
-        { label: "Approved salons", value: salons, icon: BadgeCheck },
+        { label: "Approved tiffin services", value: tiffin, icon: BadgeCheck },
         { label: "Approved kirana", value: kirana, icon: Store },
         { label: "Approved food shops", value: food, icon: Utensils },
         { label: "Pending food shops", value: pendingFood, icon: ShieldCheck },
-        { label: "Booking leads", value: bookingLeads, icon: MessageCircle },
+        { label: "Tiffin enquiries", value: bookingLeads, icon: MessageCircle },
         { label: "Order leads", value: orderLeads, icon: MessageCircle },
         { label: "Food WhatsApp leads", value: foodLeads, icon: MessageCircle },
         { label: "Featured shops", value: featured, icon: Star },
@@ -1378,7 +1378,7 @@ function ItemsDialog({ business }: { business: AdminBusiness }) {
   const [open, setOpen] = useState(false);
   const services = useQuery({
     queryKey: ["admin-business-services", business.id],
-    enabled: open && business.type === "salon",
+    enabled: open && business.type === "tiffin",
     queryFn: async () => {
       const { data } = await supabase.from("salon_services").select("*").eq("business_id", business.id);
       return (data || []) as Array<{ id: string; name: string; price: number; duration_minutes: number; is_active: boolean }>;
@@ -1406,16 +1406,16 @@ function ItemsDialog({ business }: { business: AdminBusiness }) {
       <Button variant="outline" className="rounded-xl font-bold" onClick={() => setOpen(true)}><Eye className="h-4 w-4" /> View</Button>
       <DialogContent className="rounded-3xl bg-white">
         <DialogHeader>
-          <DialogTitle>{business.type === "salon" ? "Salon services" : business.type === "food" ? "Food menu items" : "Kirana products"}</DialogTitle>
+          <DialogTitle>{business.type === "tiffin" ? "Tiffin meal plans" : business.type === "food" ? "Food menu items" : "Kirana products"}</DialogTitle>
           <DialogDescription>{business.name}</DialogDescription>
         </DialogHeader>
         <div className="grid max-h-[60vh] gap-3 overflow-y-auto">
-          {business.type === "salon"
+          {business.type === "tiffin"
             ? (services.data || []).map((item) => <InfoRow key={item.id} title={item.name} meta={`Rs ${item.price} - ${item.duration_minutes} min`} />)
             : business.type === "food"
               ? (foodItems.data || []).map((item) => <InfoRow key={item.id} title={item.name} meta={`${item.food_categories?.name || "Local Food"} - Rs ${item.price || "Ask shop"} - ${item.is_veg ? "Veg" : "Non-veg"} - ${item.is_available ? "Available" : "Unavailable"}`} />)
               : (products.data || []).map((item) => <InfoRow key={item.id} title={item.name} meta={`${item.unit || "Unit"} - Rs ${item.price || "Ask shop"} - ${item.in_stock ? "In stock" : "Out of stock"}`} />)}
-          {business.type === "salon" && !services.data?.length ? <EmptyLine text="No services added." /> : null}
+          {business.type === "tiffin" && !services.data?.length ? <EmptyLine text="No meal plans added." /> : null}
           {business.type === "kirana" && !products.data?.length ? <EmptyLine text="No products added." /> : null}
           {business.type === "food" && !foodItems.data?.length ? <EmptyLine text="No menu items added." /> : null}
         </div>
@@ -1447,7 +1447,7 @@ function CategoryPanel({
     mutationFn: async (values: z.infer<typeof categorySchema>) => {
       const { error } =
         table === "categories"
-          ? await supabase.from("categories").insert({ ...values, business_type: "salon" })
+          ? await supabase.from("categories").insert({ ...values, business_type: "tiffin" })
           : table === "product_categories"
             ? await supabase.from("product_categories").insert({ ...values, business_id: null })
             : await supabase.from("food_categories").insert(values);

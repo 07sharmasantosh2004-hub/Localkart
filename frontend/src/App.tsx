@@ -1,13 +1,13 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SkeletonCard } from "./components/feedback";
 
 const RootLayout = lazy(() => import("./layouts/RootLayout"));
 const Home = lazy(() => import("./pages/Home"));
-const Salons = lazy(() => import("./pages/Salons"));
-const SalonDetail = lazy(() => import("./pages/SalonDetail"));
+const TiffinServices = lazy(() => import("./pages/TiffinServices"));
+const TiffinServiceDetail = lazy(() => import("./pages/TiffinServiceDetail"));
 const Kirana = lazy(() => import("./pages/Kirana"));
 const KiranaDetail = lazy(() => import("./pages/KiranaDetail"));
 const Food = lazy(() => import("./pages/Food"));
@@ -62,7 +62,8 @@ function App() {
               <Route path="onboarding" element={<PartnerOnboarding />} />
               <Route path="profile" element={<PartnerProfile />} />
               <Route path="business" element={<PartnerBusinessPage />} />
-              <Route path="salon/services" element={<PartnerServicesPage />} />
+              <Route path="tiffin/meal-plans" element={<PartnerServicesPage />} />
+              <Route path="salon/services" element={<Navigate to="/partner/tiffin/meal-plans" replace />} />
               <Route path="kirana/products" element={<PartnerProductsPage />} />
               <Route path="food" element={<FoodOwnerDashboard />} />
               <Route path="food/menu" element={<FoodMenuManager />} />
@@ -75,8 +76,10 @@ function App() {
           </Route>
           <Route path="/" element={<RootLayout />}>
             <Route index element={<Home />} />
-            <Route path="salons" element={<Salons />} />
-            <Route path="salons/:slug" element={<SalonDetail />} />
+            <Route path="tiffin-services" element={<TiffinServices />} />
+            <Route path="tiffin-services/:slug" element={<TiffinServiceDetail />} />
+            <Route path="salons" element={<Navigate to="/tiffin-services" replace />} />
+            <Route path="salons/:slug" element={<Navigate to="/tiffin-services" replace />} />
             <Route path="kirana" element={<Kirana />} />
             <Route path="kirana/:slug" element={<KiranaDetail />} />
             <Route path="food" element={<Food />} />
@@ -87,8 +90,11 @@ function App() {
             <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="faq" element={<FAQPage />} />
-            <Route path="salon-booking/:city" element={<CityLanding type="salon" />} />
-            <Route path="salon-booking/:city/:area" element={<CityLanding type="salon" />} />
+            <Route path="tiffin-services/city/:city/:area" element={<CityLanding type="tiffin" />} />
+            <Route path="tiffin-service/:city" element={<CityLanding type="tiffin" />} />
+            <Route path="tiffin-services/city/:city" element={<CityLanding type="tiffin" />} />
+            <Route path="salon-booking/:city" element={<CityLanding type="tiffin" />} />
+            <Route path="salon-booking/:city/:area" element={<CityLanding type="tiffin" />} />
             <Route path="kirana-delivery/:city" element={<CityLanding type="kirana" />} />
             <Route path="kirana-delivery/:city/:area" element={<CityLanding type="kirana" />} />
             <Route path="food-delivery/:city" element={<CityLanding type="food" />} />

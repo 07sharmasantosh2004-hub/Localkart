@@ -1,61 +1,96 @@
-import type { AdUnit, Business, FAQItem, FoodCategory, FoodMenuItem, KiranaProduct, SalonService } from "./types";
+import type { AdUnit, Business, FAQItem, FoodCategory, FoodMenuItem, KiranaProduct, MealPlan } from "./types";
 
-export const salons: Business[] = [
+export const tiffinProviders: Business[] = [
   {
-    id: "salon-1",
-    name: "Urban Roots Salon",
-    slug: "urban-roots-salon",
-    type: "salon",
-    area: "Indiranagar",
-    city: "Bengaluru",
-    address: "12th Main Road, Indiranagar, Bengaluru",
+    id: "tiffin-1",
+    name: "Ghar Ka Dabba",
+    slug: "ghar-ka-dabba",
+    type: "tiffin",
+    area: "Lajpat Nagar",
+    city: "New Delhi",
+    address: "Near Central Market, Lajpat Nagar, New Delhi",
     whatsapp: "+91 98765 43210",
     phone: "+91 98765 43210",
     distance_meters: 850,
     rating: 4.8,
     cover_image:
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1543353071-873f17a7a088?auto=format&fit=crop&w=1200&q=80",
     is_open: true,
+    delivery_available: true,
+    pickup_available: true,
+    min_order: 99,
+    category: "North Indian Tiffin",
+    popular_items: ["Monthly lunch plan", "Trial thali", "Full day meals"],
+    meal_types: ["Lunch", "Dinner", "Full day"],
+    cuisines: ["North Indian", "Homemade"],
+    veg_available: true,
+    non_veg_available: false,
+    monthly_plan_available: true,
+    trial_meal_available: true,
     description:
-      "Clean unisex salon for haircuts, beard styling, facials, hair color and everyday grooming.",
+      "Home-style veg tiffin with roti, sabzi, dal, rice and monthly subscription plans for students and working professionals.",
   },
   {
-    id: "salon-2",
-    name: "Classic Cut Studio",
-    slug: "classic-cut-studio",
-    type: "salon",
-    area: "Koramangala",
-    city: "Bengaluru",
-    address: "5th Block, Koramangala, Bengaluru",
+    id: "tiffin-2",
+    name: "Maa Annapurna Meals",
+    slug: "maa-annapurna-meals",
+    type: "tiffin",
+    area: "Andheri East",
+    city: "Mumbai",
+    address: "Marol Pipeline Road, Andheri East, Mumbai",
     whatsapp: "+91 99887 76655",
     phone: "+91 99887 76655",
     distance_meters: 1400,
     rating: 4.6,
     cover_image:
-      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1200&q=80",
     is_open: true,
+    delivery_available: true,
+    pickup_available: false,
+    min_order: 120,
+    category: "Home Food Provider",
+    popular_items: ["Weekly dinner plan", "Breakfast boxes", "Non-veg Sunday meal"],
+    meal_types: ["Breakfast", "Lunch", "Dinner"],
+    cuisines: ["Maharashtrian", "North Indian"],
+    veg_available: true,
+    non_veg_available: true,
+    monthly_plan_available: true,
+    trial_meal_available: true,
     description:
-      "Neighbourhood grooming studio known for quick appointments and polite service.",
+      "Fresh homemade meals with daily, weekly and monthly plans. Delivery timing and menu are confirmed directly on WhatsApp.",
   },
   {
-    id: "salon-3",
-    name: "Glow & Trim Salon",
-    slug: "glow-and-trim-salon",
-    type: "salon",
-    area: "HSR Layout",
-    city: "Bengaluru",
-    address: "Sector 2, HSR Layout, Bengaluru",
+    id: "tiffin-3",
+    name: "Healthy Bowl Tiffins",
+    slug: "healthy-bowl-tiffins",
+    type: "tiffin",
+    area: "Kothrud",
+    city: "Pune",
+    address: "Karve Road, Kothrud, Pune",
     whatsapp: "+91 91234 56780",
     phone: "+91 91234 56780",
     distance_meters: 2600,
     rating: 4.7,
     cover_image:
-      "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=1200&q=80",
-    is_open: false,
+      "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80",
+    is_open: true,
+    delivery_available: true,
+    pickup_available: true,
+    min_order: 149,
+    category: "Healthy Tiffin",
+    popular_items: ["Diet lunch", "Protein dinner", "Trial meal"],
+    meal_types: ["Lunch", "Dinner"],
+    cuisines: ["Healthy", "Indian"],
+    veg_available: true,
+    non_veg_available: true,
+    monthly_plan_available: true,
+    trial_meal_available: true,
     description:
-      "Family salon for haircut, facial, massage, grooming and simple beauty services.",
+      "Balanced home food and cloud kitchen meals with veg and non-veg options for office lunch and dinner subscriptions.",
   },
 ];
+
+export const salons = tiffinProviders;
 
 export const kiranaStores: Business[] = [
   {
@@ -280,14 +315,70 @@ export const foodMenuItems: FoodMenuItem[] = [
   },
 ];
 
-export const salonServices: SalonService[] = [
-  { id: "haircut", name: "Haircut", price: 180, duration: "30 min", category: "haircut" },
-  { id: "shave", name: "Shave / Beard Trim", price: 120, duration: "20 min", category: "shave" },
-  { id: "facial", name: "Basic Facial", price: 499, duration: "45 min", category: "facial" },
-  { id: "hair-color", name: "Hair Color", price: 899, duration: "90 min", category: "hair color" },
-  { id: "massage", name: "Head Massage", price: 249, duration: "25 min", category: "massage" },
-  { id: "grooming", name: "Grooming Package", price: 699, duration: "75 min", category: "grooming" },
+export const mealPlans: MealPlan[] = [
+  {
+    id: "trial-veg-thali",
+    name: "Trial Veg Thali",
+    price: 99,
+    duration: "One meal",
+    category: "Trial Meal",
+    description: "Roti, dal, sabzi, rice and salad. Good for first-time tasting.",
+    is_veg: true,
+    includes: ["Lunch", "Veg", "Trial"],
+  },
+  {
+    id: "daily-lunch",
+    name: "Daily Lunch Plan",
+    price: 120,
+    duration: "Per meal",
+    category: "Daily Meal",
+    description: "Fresh lunch delivered on working days. Menu changes daily.",
+    is_veg: true,
+    includes: ["Lunch", "Delivery", "Daily"],
+  },
+  {
+    id: "dinner-plan",
+    name: "Dinner Tiffin",
+    price: 130,
+    duration: "Per meal",
+    category: "Daily Meal",
+    description: "Evening tiffin with roti, sabzi, dal and rice.",
+    is_veg: true,
+    includes: ["Dinner", "Veg"],
+  },
+  {
+    id: "full-day",
+    name: "Full Day Meals",
+    price: 249,
+    duration: "Breakfast + lunch + dinner",
+    category: "Full Day",
+    description: "Complete meal support for students and professionals.",
+    is_veg: true,
+    includes: ["Breakfast", "Lunch", "Dinner"],
+  },
+  {
+    id: "monthly-subscription",
+    name: "Monthly Subscription",
+    price: 3200,
+    duration: "Monthly",
+    category: "Monthly Plan",
+    description: "Regular lunch or dinner subscription. Final menu and holidays confirmed by provider.",
+    is_veg: true,
+    includes: ["Monthly", "Delivery"],
+  },
+  {
+    id: "non-veg-special",
+    name: "Non-veg Special Meal",
+    price: 180,
+    duration: "Per meal",
+    category: "Non-veg",
+    description: "Chicken or egg meal based on provider availability.",
+    is_veg: false,
+    includes: ["Lunch", "Dinner", "Non-veg"],
+  },
 ];
+
+export const salonServices = mealPlans;
 
 export const kiranaProducts: KiranaProduct[] = [
   { id: "atta", name: "Atta", unit: "5 kg", priceHint: "Ask shop", category: "Atta" },
@@ -304,7 +395,7 @@ export const customerFaqs: FAQItem[] = [
   {
     question: "Is this app free?",
     answer:
-      "Yes. Customers can discover nearby salons and kirana shops without paying any platform fee.",
+      "Yes. Customers can discover nearby tiffin services, home food providers, cloud kitchens and kirana shops without paying any platform fee.",
   },
   {
     question: "Do I need to pay extra delivery charges?",
@@ -312,9 +403,9 @@ export const customerFaqs: FAQItem[] = [
       "The platform does not add extra app charges. Delivery charges, if any, are decided by the shopkeeper and confirmed on WhatsApp.",
   },
   {
-    question: "How do I book a salon appointment?",
+    question: "How do I order or enquire for tiffin service?",
     answer:
-      "Choose a nearby salon, select a service and preferred time, then send the booking details directly to the salon on WhatsApp.",
+      "Choose a nearby tiffin provider, select meal preference and plan type, then send your enquiry directly on WhatsApp.",
   },
   {
     question: "How do I order from kirana shops?",
@@ -329,7 +420,7 @@ export const customerFaqs: FAQItem[] = [
   {
     question: "Can shopkeepers register for free?",
     answer:
-      "Yes. Local salon owners and kirana shopkeepers can submit their shop for free listing.",
+      "Yes. Tiffin providers, cloud kitchens, home food businesses, kirana stores and local food shops can submit their listing for free.",
   },
   {
     question: "Does the app collect payment?",
@@ -363,9 +454,9 @@ export const adUnits: AdUnit[] = [
   },
   {
     id: "ad-2",
-    slot: "salon_detail_bottom",
-    title: "Salon featured placement",
-    description: "Future promoted listing slot, no real ad ID hardcoded.",
+    slot: "tiffin_detail_bottom",
+    title: "Tiffin service featured placement",
+    description: "Future promoted listing slot for tiffin providers, no real ad ID hardcoded.",
     is_active: true,
   },
   {

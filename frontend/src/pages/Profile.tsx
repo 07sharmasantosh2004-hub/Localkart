@@ -17,13 +17,13 @@ export default function Profile() {
           <h1 className="mt-4 text-2xl font-black text-slate-950">{profile?.full_name || "LocalKart user"}</h1>
           <p className="mt-1 text-sm font-semibold text-slate-500">{profile?.phone || user?.email}</p>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-slate-600">
-            Save your favorite local shops, revisit trusted salons and connect faster with your nearby dukandaar.
+            Save your favorite local shops, revisit trusted tiffin providers and connect faster with your nearby dukandaar.
           </p>
         </div>
         <div className="mt-5 grid gap-3">
-          <ProfileLink to="/favorites" icon={<Heart className="h-5 w-5" />} label="Favorites" text="Saved salons and kirana shops" />
+          <ProfileLink to="/favorites" icon={<Heart className="h-5 w-5" />} label="Favorites" text="Saved tiffin providers and kirana shops" />
           <ProfileLink to="/food" icon={<Utensils className="h-5 w-5" />} label="Food shops" text="Cafe, Chinese, momo and snack shops nearby" />
-          <ProfileLink to="/register-shop" icon={<Store className="h-5 w-5" />} label="List shop free" text="Add salon, kirana or food shop for approval" />
+          <ProfileLink to="/register-shop" icon={<Store className="h-5 w-5" />} label="List shop free" text="Add tiffin, kirana or food shop for approval" />
           <ProfileLink to="/partner" icon={<Store className="h-5 w-5" />} label="Partner dashboard" text="Manage your shop, menu, services/products and leads" />
           <ProfileLink to="/contact" icon={<MessageCircle className="h-5 w-5" />} label="Help & support" text="Need help? Message LocalKart" />
           <Button variant="outline" className="h-12 rounded-2xl border-red-100 font-black text-red-700 hover:bg-red-50" onClick={() => void signOut()}>

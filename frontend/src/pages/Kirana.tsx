@@ -14,7 +14,7 @@ export default function Kirana() {
   const [search, setSearch] = useState("");
   const [delivery, setDelivery] = useState(false);
   const [distance, setDistance] = useState("15");
-  const { location, error: locationError } = useGeolocation();
+  const { location, error: locationError, searchTerm } = useGeolocation();
   const {
     data: nearbyShops = kiranaStores,
     isLoading,
@@ -24,6 +24,7 @@ export default function Kirana() {
     lat: location?.lat,
     lng: location?.lng,
     radiusKm: Number(distance),
+    searchLocation: searchTerm,
   });
 
   const filteredShops = useMemo(

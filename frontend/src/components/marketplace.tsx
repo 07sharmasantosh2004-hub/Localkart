@@ -20,8 +20,8 @@ import {
   Plus,
   Search,
   ShieldCheck,
-  Scissors,
   ShoppingBasket,
+  Soup,
   Star,
   Store,
   Utensils,
@@ -34,13 +34,14 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { cn, formatDistance, generateWhatsAppLink, titleCase } from "../lib/utils";
-import { adUnits, kiranaProducts, salonServices } from "../lib/mockData";
+import { adUnits, kiranaProducts, mealPlans } from "../lib/mockData";
 import { supabase } from "../lib/supabase";
 import { SkeletonCard } from "./feedback";
 import { useAuth } from "../hooks/useAuth";
-import type { Business, BusinessType, FAQItem, KiranaProduct, SEOConfig, SalonService } from "../lib/types";
+import type { Business, BusinessType, FAQItem, KiranaProduct, MealPlan, SEOConfig } from "../lib/types";
 
 type CardTone = BusinessType | "neutral";
+const defaultMealPlans = mealPlans;
 
 interface DynamicAdSlotRow {
   key: string;
@@ -56,7 +57,7 @@ interface DynamicAdSlotRow {
 }
 
 const toneClasses: Record<CardTone, string> = {
-  salon: "from-[#FDF2F8] to-[#FCE7F3] border-fuchsia-100 text-[#701A75]", // Soft Rose/Plum
+  tiffin: "from-[#ECFDF5] to-[#FFF7ED] border-emerald-100 text-[#065F46]",
   kirana: "from-[#F0FDF4] to-[#F59E0B]/10 border-emerald-100 text-[#065F46]", // Fresh Green/Saffron
   food: "from-[#FFF7ED] to-[#FFEDD5] border-orange-100 text-[#9A3412]", // Warm Orange
   neutral: "from-white to-[#F8FAFC] border-slate-200 text-slate-700",
@@ -76,13 +77,13 @@ export function HeroSection() {
               <span className="block text-emerald-700 underline decoration-amber-400 decoration-8 underline-offset-8">Order Direct.</span>
             </h1>
             <p className="max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
-              Connect with trusted local salons, kirana stores, and cafés directly on WhatsApp. No platform markup, no hidden fees.
+              Connect with trusted tiffin services, kirana stores, and food shops directly on WhatsApp. No platform markup, no hidden fees.
             </p>
             <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:flex-wrap sm:items-center">
               <Button asChild size="lg" className="h-14 w-full rounded-2xl bg-[#064E3B] px-6 text-base font-black text-white shadow-2xl shadow-emerald-950/20 transition-all hover:scale-105 sm:w-auto">
-                <Link to="/salons" className="flex items-center gap-2">
-                  <Scissors className="h-4 w-4" />
-                  Explore Salons
+                <Link to="/tiffin-services" className="flex items-center gap-2">
+                  <Soup className="h-4 w-4" />
+                  Find Tiffin
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-14 w-full rounded-2xl border-slate-200 bg-white px-6 text-base font-black text-slate-900 shadow-sm transition-all hover:scale-105 hover:bg-slate-50 sm:w-auto">
@@ -214,7 +215,7 @@ export function SmartImage({
 }
 
 export function LocationSelector() {
-  const [area, setArea] = useState("Indiranagar, Bengaluru");
+  const [area, setArea] = useState("Choose your city, area or pincode");
   const [editing, setEditing] = useState(false);
   const [gpsStatus, setGpsStatus] = useState("");
 
@@ -396,8 +397,8 @@ export function WhatsAppCTAButton({
 
 export const BusinessCard = memo(function BusinessCard({ business, to, actionLabel }: { business: Business; to: string; actionLabel: string }) {
   const message =
-    business.type === "salon"
-      ? `Hello ${business.name}, I want to book a salon appointment.`
+    business.type === "tiffin"
+      ? `Hello ${business.name}, I want to enquire/order tiffin service.`
       : business.type === "kirana"
         ? `Hello ${business.name}, I want to order groceries.`
         : `Hello ${business.name}, I want to place a food order.`;
@@ -435,11 +436,12 @@ export const BusinessCard = memo(function BusinessCard({ business, to, actionLab
   );
 });
 
-export function SalonCard({ salon }: { salon: Business }) {
+export function TiffinCard({ provider }: { provider: Business }) {
   return (
-    <BusinessCard business={salon} to={`/salons/${salon.slug}`} actionLabel="Book" />
+    <BusinessCard business={provider} to={`/tiffin-services/${provider.slug}`} actionLabel="Enquire" />
   );
 }
+
 
 export function KiranaCard({ shop }: { shop: Business }) {
   return (
@@ -546,7 +548,7 @@ export function PremiumBusinessGrid({
   adSlot?: string;
 }) {
   const renderCard = (business: Business) => {
-    if (type === "salon") return <SalonCard salon={business} />;
+    if (type === "tiffin") return <TiffinCard provider={business} />;
     if (type === "kirana") return <KiranaCard shop={business} />;
     return <FoodCard shop={business} />;
   };
@@ -566,13 +568,13 @@ export function PremiumBusinessGrid({
 }
 
 export function ServiceSelector({
-  services = salonServices,
+  services = defaultMealPlans,
   value,
   onChange,
 }: {
-  services?: SalonService[];
+  services?: MealPlan[];
   value: string;
-  onChange: (service: SalonService) => void;
+  onChange: (service: MealPlan) => void;
 }) {
   return (
     <div className="grid gap-3">
@@ -679,31 +681,31 @@ export function GroceryListInput({ value, onChange }: { value: string; onChange:
   );
 }
 
-export function BookingWhatsAppForm({ salon }: { salon: Business }) {
+export function BookingWhatsAppForm({ salon: provider }: { salon: Business }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [selectedService, setSelectedService] = useState<SalonService>(salonServices[0]);
+  const [selectedService, setSelectedService] = useState<MealPlan>(defaultMealPlans[0]);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
 
-  const message = `Hello ${salon.name},
-I want to book a salon appointment.
+  const message = `Hello ${provider.name},
+I want to enquire/order tiffin service.
 
 Name: ${name}
 Phone: ${phone}
-Service: ${selectedService.name}
+Meal plan: ${selectedService.name}
 Preferred Date: ${date}
 Preferred Time: ${time}
 Note: ${note || "No special note"}
 
-Please confirm my booking.`;
+Please confirm price, availability, and delivery time.`;
 
-  const canSend = salon.whatsapp && name && phone && selectedService.name && date && time;
+  const canSend = provider.whatsapp && name && phone && selectedService.name && date && time;
 
   const handleSend = async () => {
-    if (!salon.whatsapp) setError("WhatsApp number is required.");
+    if (!provider.whatsapp) setError("WhatsApp number is required.");
     else if (!name) setError("Customer name is required.");
     else if (!phone) setError("Customer phone is required.");
     else if (!selectedService.name) setError("Service is required.");
@@ -711,7 +713,7 @@ Please confirm my booking.`;
     else {
       setError("");
       await supabase.from("whatsapp_booking_leads").insert({
-        business_id: salon.id,
+        business_id: provider.id,
         customer_name: name,
         customer_phone: phone,
         preferred_date: date,
@@ -724,7 +726,7 @@ Please confirm my booking.`;
           source: "frontend_whatsapp_form",
         },
       });
-      window.open(generateWhatsAppLink(salon.whatsapp, message), "_blank", "noopener,noreferrer");
+      window.open(generateWhatsAppLink(provider.whatsapp, message), "_blank", "noopener,noreferrer");
     }
   };
 
@@ -736,7 +738,7 @@ Please confirm my booking.`;
         </span>
         <div>
           <h2 className="text-xl font-black text-slate-950">Book on WhatsApp</h2>
-          <p className="text-sm text-slate-600">Salon will confirm your slot manually.</p>
+          <p className="text-sm text-slate-600">Provider will confirm price, delivery and availability.</p>
         </div>
       </div>
 
@@ -952,7 +954,7 @@ export function ShopRegistrationForm() {
       <div>
         <Label className="text-sm font-bold text-slate-700">Business type</Label>
         <select className="mt-2 h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-700">
-          <option>Salon</option>
+          <option>Tiffin Service</option>
           <option>Kirana</option>
         </select>
       </div>
@@ -1009,7 +1011,7 @@ export function FAQAccordion({ items }: { items: FAQItem[] }) {
 
 export function HowItWorks() {
   const steps = [
-    { title: "Choose nearby shop", desc: "Find trusted salons or kirana stores in your area.", icon: Search },
+    { title: "Choose nearby provider", desc: "Find trusted tiffin services, food shops or kirana stores in your area.", icon: Search },
     { title: "Fill details", desc: "Select services or write your grocery list easily.", icon: Edit3 },
     { title: "Send on WhatsApp", desc: "Your request goes directly to the shopkeeper's phone.", icon: MessageCircle },
     { title: "Shopkeeper confirms", desc: "Get direct manual confirmation and delivery details.", icon: BadgeCheck },
@@ -1095,12 +1097,12 @@ export function CityLandingContent({ type, city, area }: { type: BusinessType; c
   const areaName = titleCase(area);
   const place = areaName ? `${areaName}, ${cityName}` : cityName;
 
-  if (type === "salon") {
+  if (type === "tiffin") {
     return (
       <section className="rounded-3xl border border-fuchsia-100 bg-fuchsia-50 p-6">
-        <h1 className="text-3xl font-black tracking-tight text-slate-950">Book Nearby Salons in {place} Directly on WhatsApp</h1>
+        <h1 className="text-3xl font-black tracking-tight text-slate-950">Find Nearby Tiffin Services in {place} Directly on WhatsApp</h1>
         <p className="mt-4 leading-7 text-slate-700">
-          Salon mein line lagana ab khatam. With LocalKart, you can explore nearby salons in {place}, check services, and send your booking request directly on WhatsApp. The salon will confirm your slot manually.
+          With LocalKart, you can explore nearby tiffin services in {place}, compare meal plans, and send your enquiry directly on WhatsApp. The provider will confirm price, delivery and availability.
         </p>
       </section>
     );
@@ -1135,7 +1137,7 @@ export function AdminLayout() {
   const nav = [
     { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
     { label: "Approvals", to: "/admin/approvals", icon: UserCheck },
-    { label: "Salons", to: "/admin/salons", icon: Scissors },
+    { label: "Tiffin services", to: "/admin/tiffin-services", icon: Soup },
     { label: "Kirana", to: "/admin/kirana-shops", icon: Store },
     { label: "Food shops", to: "/admin/food-shops", icon: Utensils },
     { label: "Users", to: "/admin/users", icon: Users },

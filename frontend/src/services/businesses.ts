@@ -3,5 +3,5 @@ export {
   useFoodMenuItems,
   useKiranaProducts,
   useNearbyBusinesses,
-  useSalonServices,
+  useTiffinMealPlans,
 } from "../lib/businesses";

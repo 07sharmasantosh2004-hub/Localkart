@@ -15,7 +15,7 @@ const registrationSchema = z.object({
   ownerName: z.string().min(2, "Owner name is required"),
   mobileNumber: z.string().min(10, "Mobile number is required"),
   whatsappNumber: z.string().min(10, "WhatsApp number is required"),
-  businessType: z.enum(["salon", "kirana", "food"]),
+  businessType: z.enum(["tiffin", "kirana", "food"]),
   foodCategoryId: z.string().optional(),
   shopName: z.string().min(2, "Shop name is required"),
   description: z.string().min(20, "Add a short description"),
@@ -67,9 +67,9 @@ export function ShopRegistrationForm() {
   const form = useForm<z.input<typeof registrationSchema>, unknown, RegistrationValues>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
-      businessType: "salon",
-      state: "Karnataka",
-      city: "Bengaluru",
+      businessType: "tiffin",
+      state: "",
+      city: "",
       homeDeliveryAvailable: "no",
       pickupAvailable: "yes",
       deliveryRadius: 0,
@@ -185,7 +185,7 @@ export function ShopRegistrationForm() {
       <div>
         <Label>Business type</Label>
         <select className="mt-2 h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold" {...form.register("businessType")}>
-          <option value="salon">Salon</option>
+          <option value="tiffin">Tiffin Service / Home Food</option>
           <option value="kirana">Kirana</option>
           <option value="food">Local Café & Food Shop</option>
         </select>

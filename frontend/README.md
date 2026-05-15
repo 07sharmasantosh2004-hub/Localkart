@@ -1,36 +1,60 @@
-# LocalKart Frontend (PWA)
+# LocalKart Frontend
 
-## Tech Stack
-- React + Vite + TypeScript
-- Tailwind CSS v4
-- shadcn/ui
-- React Router
-- TanStack Query
-- Supabase JS
+LocalKart is a Vite + React + TypeScript marketplace for nearby tiffin services, cloud kitchens, home food providers, kirana shops and local food shops. Customers discover providers by GPS or manual location and send simple WhatsApp enquiries or orders.
 
-## Running locally
+## Local Setup
 
 ```bash
 npm install
 npm run dev
 ```
 
-Make sure to create a `.env.local` file with your Supabase credentials:
+Create `frontend/.env.local` from `.env.example`.
+
 ```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_SITE_URL=https://localkart-nine.vercel.app
+VITE_APP_NAME=LocalKart
+VITE_REVERSE_GEOCODING_PROVIDER=nominatim
 ```
 
-## Deployment to Cloudflare Pages
+Do not put Supabase service-role keys or other secrets in frontend env files.
 
-1. **Push your code to GitHub/GitLab.**
-2. Go to the **Cloudflare Dashboard** -> **Pages** -> **Create a project** -> **Connect to Git**.
-3. Select your repository.
-4. In the **Build settings**, configure the following:
-   - **Framework preset**: Vite
-   - **Build command**: `npm run build`
-   - **Build output directory**: `dist`
-5. Expand **Environment variables (advanced)** and add:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-6. Click **Save and Deploy**. Cloudflare Pages will automatically build and deploy your PWA to its global edge network!
+## Location
+
+The app uses `navigator.geolocation` on HTTPS, including Vercel. If permission is granted, lat/lng are stored and used for nearby search. If reverse geocoding is enabled with `VITE_REVERSE_GEOCODING_PROVIDER=nominatim`, the header also shows area, city, state and pincode when available. If GPS is denied, customers can enter city, area or pincode manually; the selected location is persisted in `localStorage`.
+
+Set `VITE_REVERSE_GEOCODING_PROVIDER=none` to skip address lookup while keeping GPS coordinates.
+
+## Supabase
+
+Run the SQL migrations in order from `database/`. The tiffin/location migration is:
+
+```text
+database/006_tiffin_services_location.sql
+```
+
+It adds the `tiffin` business type, location indexes, meal-plan metadata and a compatible `nearby_businesses` RPC. Existing legacy `salon` rows remain readable as tiffin providers during migration.
+
+Required public tables include `businesses`, `food_items`, `products`, `whatsapp_booking_leads`, `whatsapp_order_leads` and `whatsapp_food_order_leads`.
+
+## Checks
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm test
+```
+
+## Deploy To Vercel
+
+Use:
+
+- Framework preset: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variables: the `VITE_*` values above
+
+No payment gateway is required. Tiffin enquiries and food/kirana orders are sent directly through WhatsApp, with Supabase lead capture used when configured.
