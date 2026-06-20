@@ -72,7 +72,7 @@ export default function KiranaDetail() {
                   </div>
                 )}
               </div>
-              <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl md:text-7xl">{shop.name}</h1>
+              <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">{shop.name}</h1>
               <p className="mt-3 max-w-2xl text-base font-medium text-white/80 sm:mt-4 sm:text-lg">{shop.address}</p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function KiranaDetail() {
             { label: "Local Trust", icon: Star, color: "text-amber-700", bg: "bg-amber-50" },
             { label: "Quality Products", icon: ShieldPlus, color: "text-purple-700", bg: "bg-purple-50" },
           ].map((item) => (
-            <div key={item.label} className="flex items-center gap-4 rounded-[2rem] border border-white bg-white/60 p-5 shadow-sm backdrop-blur-sm">
+            <div key={item.label} className="flex items-center gap-4 rounded-[1.5rem] border border-white bg-white/60 p-4 shadow-sm backdrop-blur-sm sm:p-5 md:rounded-[2rem]">
               <span className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-inner", item.bg, item.color)}>
                 <item.icon className="h-6 w-6" />
               </span>
@@ -97,7 +97,7 @@ export default function KiranaDetail() {
         <div className="mt-12 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <section className="space-y-8">
             <div className="mobile-safe-card border border-slate-100 bg-white shadow-sm">
-              <h2 className="text-2xl font-black text-slate-950 mb-6">Popular categories</h2>
+              <h2 className="mb-6 text-2xl font-black text-slate-950">Popular categories</h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {categories.map((category) => (
                   <Badge key={category} className="rounded-xl border-emerald-100 bg-emerald-50 px-4 py-2 text-emerald-700 font-black text-xs uppercase tracking-widest">
@@ -119,7 +119,7 @@ export default function KiranaDetail() {
                 ))}
               </div>
 
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-4 min-[420px]:flex-row">
                 <Button asChild variant="outline" className="h-14 flex-1 rounded-[1.5rem] border-slate-200 bg-white text-lg font-black text-slate-700 hover:bg-slate-50 shadow-sm">
                   <a href={`tel:${shop.phone}`}>
                     <Phone className="h-5 w-5" />

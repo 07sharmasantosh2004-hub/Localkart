@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, LocateFixed, MapPin, Menu, Search, Store, UserCircle, Utensils, ShoppingBasket, Soup } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "./ui/button";
 import { useAuth } from "../hooks/useAuth";
 import { cn } from "../lib/utils";
@@ -10,7 +11,9 @@ import { Input } from "./ui/input";
 
 export default function Header() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [siteSearch, setSiteSearch] = useState("");
   const [manualLocation, setManualLocation] = useState("");
   const locationState = useLocationContext();
   const userPath = user ? "/profile" : "/login";
@@ -18,8 +21,70 @@ export default function Header() {
     locationState.saveManualLocation(manualLocation);
     setManualLocation("");
   };
+  const submitSearch = () => {
+    const query = siteSearch.trim();
+    if (!query) return;
+    const lowerQuery = query.toLowerCase();
+    const target =
+      /\b(kirana|grocery|grocer|ration|store)\b/.test(lowerQuery)
+        ? "/kirana"
+        : /\b(food|cafe|restaurant|momo|chinese|bakery|snack)\b/.test(lowerQuery)
+          ? "/food"
+          : "/tiffin-services";
+    navigate(`${target}?q=${encodeURIComponent(query)}`);
+    setMenuOpen(false);
+  };
+  const locationDialog =
+    locationState.manualModalOpen && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            className="fixed inset-0 z-[999] flex min-h-dvh items-end overflow-y-auto bg-slate-950/60 p-2 backdrop-blur-sm md:items-center md:justify-center md:p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="location-dialog-title"
+          >
+            <div className="w-full rounded-t-[1.75rem] bg-white p-4 shadow-2xl min-[380px]:rounded-[2rem] min-[380px]:p-5 md:max-w-md md:rounded-[2rem] md:p-6">
+              <div className="flex flex-col gap-3 min-[380px]:flex-row min-[380px]:items-start">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <div>
+                  <h2 id="location-dialog-title" className="text-xl font-black text-slate-950">Choose your location</h2>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">Use GPS for nearby results, or enter city, area or pincode manually.</p>
+                </div>
+              </div>
+              {locationState.error ? <p className="mt-4 rounded-2xl bg-amber-50 p-3 text-sm font-bold text-amber-800">{locationState.error}</p> : null}
+              <div className="mt-5 grid gap-3">
+                <Button type="button" className="h-12 rounded-2xl bg-emerald-700 font-black hover:bg-emerald-800" onClick={() => void locationState.requestCurrentLocation()} disabled={locationState.loading}>
+                  <LocateFixed className="h-4 w-4" />
+                  {locationState.loading ? "Detecting..." : "Use current location"}
+                </Button>
+                <div className="grid gap-2">
+                  <label htmlFor="manual-location" className="text-xs font-black uppercase tracking-widest text-slate-500">City, area or pincode</label>
+                  <Input
+                    id="manual-location"
+                    value={manualLocation}
+                    onChange={(event) => setManualLocation(event.target.value)}
+                    placeholder="Example: Pune, Kothrud or 411038"
+                    className="h-12 rounded-2xl"
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") saveManualLocation();
+                    }}
+                  />
+                </div>
+                <div className="grid gap-2 min-[380px]:grid-cols-2">
+                  <Button type="button" variant="outline" className="h-11 w-full rounded-xl font-black" onClick={locationState.closeManualLocation}>Cancel</Button>
+                  <Button type="button" className="h-11 w-full rounded-xl bg-slate-950 font-black text-white hover:bg-slate-800" onClick={saveManualLocation}>Save</Button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
 
   return (
+    <>
     <header className="sticky top-0 z-[60] border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex min-h-20 max-w-7xl flex-wrap items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4 md:flex-nowrap md:px-6 md:py-0">
         <Link to="/" className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
@@ -64,17 +129,26 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="group relative order-3 mx-auto w-full flex-none md:order-none md:max-w-2xl md:flex-1">
+        <form
+          className="group relative order-3 mx-auto w-full flex-none md:order-none md:max-w-2xl md:flex-1"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            submitSearch();
+          }}
+        >
           <label htmlFor="site-search" className="sr-only">Search tiffin services, kirana or food</label>
           <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-700" />
           <input
             id="site-search"
             type="text"
+            value={siteSearch}
+            onChange={(event) => setSiteSearch(event.target.value)}
             placeholder="Search tiffin, kirana or food..."
             autoComplete="off"
             className="h-12 w-full rounded-[1.25rem] border border-slate-200 bg-slate-50 pl-12 pr-4 text-sm font-semibold outline-none transition-all focus:border-emerald-200 focus:bg-white focus:ring-4 focus:ring-emerald-100"
           />
-        </div>
+        </form>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           <nav className="hidden xl:flex items-center gap-2 mr-2">
@@ -145,46 +219,9 @@ export default function Header() {
           </div>
         </div>
       )}
-      {locationState.manualModalOpen && (
-        <div className="fixed inset-0 z-[90] flex items-end bg-slate-950/50 p-3 backdrop-blur-sm sm:items-center sm:justify-center" role="dialog" aria-modal="true" aria-labelledby="location-dialog-title">
-          <div className="w-full rounded-[2rem] bg-white p-5 shadow-2xl sm:max-w-md sm:p-6">
-            <div className="flex items-start gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-                <MapPin className="h-5 w-5" />
-              </span>
-              <div>
-                <h2 id="location-dialog-title" className="text-xl font-black text-slate-950">Choose your location</h2>
-                <p className="mt-1 text-sm leading-6 text-slate-600">Use GPS for nearby results, or enter city, area or pincode manually.</p>
-              </div>
-            </div>
-            {locationState.error ? <p className="mt-4 rounded-2xl bg-amber-50 p-3 text-sm font-bold text-amber-800">{locationState.error}</p> : null}
-            <div className="mt-5 grid gap-3">
-              <Button type="button" className="h-12 rounded-2xl bg-emerald-700 font-black hover:bg-emerald-800" onClick={() => void locationState.requestCurrentLocation()} disabled={locationState.loading}>
-                <LocateFixed className="h-4 w-4" />
-                {locationState.loading ? "Detecting..." : "Use current location"}
-              </Button>
-              <div className="grid gap-2">
-                <label htmlFor="manual-location" className="text-xs font-black uppercase tracking-widest text-slate-500">City, area or pincode</label>
-                <Input
-                  id="manual-location"
-                  value={manualLocation}
-                  onChange={(event) => setManualLocation(event.target.value)}
-                  placeholder="Example: Pune, Kothrud or 411038"
-                  className="h-12 rounded-2xl"
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") saveManualLocation();
-                  }}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button type="button" variant="outline" className="h-11 flex-1 rounded-xl font-black" onClick={locationState.closeManualLocation}>Cancel</Button>
-                <Button type="button" className="h-11 flex-1 rounded-xl bg-slate-950 font-black text-white hover:bg-slate-800" onClick={saveManualLocation}>Save</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
+    {locationDialog}
+    </>
   );
 }
 

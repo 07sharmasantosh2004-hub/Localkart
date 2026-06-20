@@ -458,10 +458,10 @@ function BusinessManager({ type, notify }: { type: BusinessType; notify: (toast:
       title={type === "tiffin" ? "Manage tiffin services" : type === "food" ? "Manage food shops" : "Manage kirana shops"}
       description="Search, filter, edit, view items and mark listings featured."
       action={
-        <div className="flex flex-wrap gap-2">
+        <div className="grid w-full gap-2 sm:flex sm:flex-wrap">
           <Select value={status} onChange={setStatus} options={["all", "approved", "pending", "blocked", "rejected"]} />
-          <Input value={city} onChange={(event) => setCity(event.target.value)} placeholder="City" className="h-10 w-32 rounded-xl" />
-          <Input value={area} onChange={(event) => setArea(event.target.value)} placeholder="Area" className="h-10 w-32 rounded-xl" />
+          <Input value={city} onChange={(event) => setCity(event.target.value)} placeholder="City" className="h-10 w-full rounded-xl sm:w-32" />
+          <Input value={area} onChange={(event) => setArea(event.target.value)} placeholder="Area" className="h-10 w-full rounded-xl sm:w-32" />
         </div>
       }
     >
@@ -1876,11 +1876,11 @@ function DataTable<T>({
               </tbody>
             </table>
           </div>
-          <div className="flex flex-col gap-3 border-t border-slate-100 px-4 py-3 text-sm font-bold text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-slate-100 px-3 py-3 text-sm font-bold text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-4">
             <span>{filtered.length} records</span>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:flex sm:flex-wrap">
               <Button variant="outline" className="h-9 rounded-xl" disabled={page === 1} onClick={() => setPage((value) => value - 1)}>Prev</Button>
-              <span>Page {page} of {totalPages}</span>
+              <span className="text-center">Page {page} of {totalPages}</span>
               <Button variant="outline" className="h-9 rounded-xl" disabled={page === totalPages} onClick={() => setPage((value) => value + 1)}>Next</Button>
             </div>
           </div>
@@ -1955,13 +1955,13 @@ function ReasonDialog({
 
 function Panel({ title, description, action, children }: { title: string; description?: string; action?: ReactNode; children: ReactNode }) {
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm md:p-5">
+    <section className="rounded-[1.5rem] border border-slate-200 bg-white p-3 shadow-sm sm:p-4 md:rounded-3xl md:p-5">
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
-          <h2 className="text-2xl font-black text-slate-950">{title}</h2>
+          <h2 className="text-xl font-black text-slate-950 sm:text-2xl">{title}</h2>
           {description ? <p className="mt-1 text-sm leading-6 text-slate-600">{description}</p> : null}
         </div>
-        {action ? <div className="min-w-0">{action}</div> : null}
+        {action ? <div className="w-full min-w-0 md:w-auto">{action}</div> : null}
       </div>
       {children}
     </section>
@@ -1972,7 +1972,7 @@ function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string
   return (
     <div>
       <p className="text-xs font-black uppercase tracking-wide text-emerald-700">{eyebrow}</p>
-      <h1 className="mt-1 text-3xl font-black text-slate-950">{title}</h1>
+      <h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">{title}</h1>
       <p className="mt-2 max-w-3xl leading-7 text-slate-600">{text}</p>
     </div>
   );
@@ -1980,7 +1980,7 @@ function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string
 
 function MetricCard({ label, value, icon: Icon }: { label: string; value: number; icon: typeof BarChart3 }) {
   return (
-    <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm">
+    <div className="rounded-[1.25rem] border border-slate-100 bg-white p-4 shadow-sm sm:rounded-3xl">
       <div className="flex items-center justify-between">
         <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700"><Icon className="h-5 w-5" /></span>
         <span className="text-2xl font-black text-slate-950">{value}</span>
@@ -2010,7 +2010,7 @@ function StatusBadge({ value }: { value: string }) {
 
 function Select({ value, onChange, options }: { value: string; onChange: (value: string) => void; options: string[] }) {
   return (
-    <select value={value} onChange={(event) => onChange(event.target.value)} className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700">
+    <select value={value} onChange={(event) => onChange(event.target.value)} className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 sm:w-auto">
       {options.map((option) => <option key={option} value={option}>{option}</option>)}
     </select>
   );

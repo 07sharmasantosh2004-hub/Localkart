@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CartProvider } from "./context/CartContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SkeletonCard } from "./components/feedback";
 
@@ -45,9 +46,10 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={<div className="mx-auto max-w-7xl p-4"><SkeletonCard /></div>}>
-        <Routes>
+      <CartProvider>
+        <BrowserRouter>
+          <Suspense fallback={<div className="mx-auto max-w-7xl p-4"><SkeletonCard /></div>}>
+          <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route element={<ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin-login" />}>
@@ -107,8 +109,9 @@ function App() {
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
-        </Suspense>
-      </BrowserRouter>
+          </Suspense>
+        </BrowserRouter>
+      </CartProvider>
     </QueryClientProvider>
   );
 }

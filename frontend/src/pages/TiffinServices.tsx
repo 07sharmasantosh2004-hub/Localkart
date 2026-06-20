@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ArrowRight, LocateFixed, MapPin, Search, Soup, Truck } from "lucide-react";
 import { tiffinProviders } from "../lib/mockData";
 import { DynamicAdSlot, SEOHead, SectionHeader, TiffinCard } from "../components/marketplace";
@@ -14,7 +14,8 @@ const mealFilters = ["All", "Breakfast", "Lunch", "Dinner", "Full day", "Monthly
 const cuisineFilters = ["All", "North Indian", "South Indian", "Healthy", "Homemade", "Maharashtrian"];
 
 export default function TiffinServices() {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("q") || "";
   const [delivery, setDelivery] = useState(false);
   const [distance, setDistance] = useState("15");
   const [meal, setMeal] = useState("All");
@@ -120,7 +121,13 @@ export default function TiffinServices() {
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-700" />
               <Input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  const params = new URLSearchParams(searchParams);
+                  if (next) params.set("q", next);
+                  else params.delete("q");
+                  setSearchParams(params, { replace: true });
+                }}
                 aria-label="Search tiffin services"
                 className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 text-base font-bold transition-all focus:bg-white focus:ring-4 focus:ring-emerald-100"
                 placeholder="Search by provider, area, cuisine or plan"

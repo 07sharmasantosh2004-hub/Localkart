@@ -107,7 +107,7 @@ export default function FoodDetail() {
             { label: "Pickup or delivery depends on availability", Icon: ShoppingBag },
             { label: "Shopkeeper confirms directly", Icon: BadgeCheck },
           ].map(({ label, Icon }) => (
-            <div key={label} className="flex items-center gap-3 rounded-3xl border border-orange-100 bg-orange-50 p-4">
+            <div key={label} className="flex items-center gap-3 rounded-[1.5rem] border border-orange-100 bg-orange-50 p-4 sm:rounded-3xl">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-orange-700">
                 <Icon className="h-5 w-5" />
               </span>
@@ -117,7 +117,7 @@ export default function FoodDetail() {
         </section>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <section className="rounded-3xl border border-slate-100 bg-white p-4 shadow-sm sm:p-5">
+          <section className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-2xl font-black text-slate-950">Menu</h2>
@@ -217,8 +217,8 @@ export default function FoodDetail() {
           </div>
         </div>
 
-        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-          <div className="flex items-start gap-3">
+        <section className="mt-6 rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-6">
+          <div className="flex flex-col gap-3 min-[380px]:flex-row min-[380px]:items-start">
             <Utensils className="mt-1 h-5 w-5 shrink-0 text-orange-700" />
             <div>
               <h2 className="text-2xl font-black text-slate-950">Order local food without complicated checkout</h2>

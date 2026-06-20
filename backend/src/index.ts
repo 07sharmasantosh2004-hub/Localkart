@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../supabase/.env") });
 
 const app = express();
 const port = process.env.PORT || 8000;
+const isProduction = process.env.NODE_ENV === "production";
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -19,7 +20,7 @@ const allowedOrigins = new Set(
     process.env.SITE_URL,
     process.env.VITE_SITE_URL,
     ...(process.env.CORS_ORIGINS || "").split(","),
-    ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:5174"]),
+    ...(isProduction ? [] : ["http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:5174"]),
   ]
     .map((origin) => origin?.trim().replace(/\/$/, ""))
     .filter(Boolean),
@@ -36,7 +37,7 @@ const corsOptions: CorsOptions = {
   },
 };
 
-type BusinessType = "salon" | "kirana" | "food";
+type BusinessType = "tiffin" | "kirana" | "food";
 
 async function supabaseRest<T>(pathName: string): Promise<T> {
   if (!supabaseUrl || !supabaseKey) {
@@ -60,8 +61,9 @@ async function supabaseRest<T>(pathName: string): Promise<T> {
   return (await response.json()) as T;
 }
 
+app.disable("x-powered-by");
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: "100kb" }));
 
 app.get("/", (req, res) => {
   res.json({
@@ -89,20 +91,25 @@ app.get("/health", async (req, res) => {
         configured: Boolean(supabaseUrl && supabaseKey),
         connected: false,
       },
-      error: error instanceof Error ? error.message : "Unknown health check error",
+      error: isProduction ? "Health check failed." : error instanceof Error ? error.message : "Unknown health check error",
     });
   }
 });
 
 app.get("/api/salons", (req, res) => {
-  res.redirect(307, "/api/businesses?type=salon");
+  res.redirect(307, "/api/businesses?type=tiffin");
+});
+
+app.get("/api/tiffin-services", (req, res) => {
+  res.redirect(307, "/api/businesses?type=tiffin");
 });
 
 app.get("/api/businesses", async (req, res) => {
   const type = String(req.query.type || "");
-  const allowedTypes: BusinessType[] = ["salon", "kirana", "food"];
+  const normalizedType = type === "salon" ? "tiffin" : type;
+  const allowedTypes: BusinessType[] = ["tiffin", "kirana", "food"];
 
-  if (type && !allowedTypes.includes(type as BusinessType)) {
+  if (normalizedType && !allowedTypes.includes(normalizedType as BusinessType)) {
     res.status(400).json({ error: "Invalid business type." });
     return;
   }
@@ -114,8 +121,10 @@ app.get("/api/businesses", async (req, res) => {
     limit: "24",
   });
 
-  if (type) {
-    query.set("type", `eq.${type}`);
+  if (normalizedType === "tiffin") {
+    query.set("type", "in.(tiffin,salon)");
+  } else if (normalizedType) {
+    query.set("type", `eq.${normalizedType}`);
   }
 
   try {
@@ -123,7 +132,7 @@ app.get("/api/businesses", async (req, res) => {
     res.json({ businesses });
   } catch (error) {
     res.status(500).json({
-      error: error instanceof Error ? error.message : "Unable to fetch businesses.",
+      error: isProduction ? "Unable to fetch businesses." : error instanceof Error ? error.message : "Unable to fetch businesses.",
     });
   }
 });

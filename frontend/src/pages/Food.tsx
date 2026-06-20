@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Search, Utensils, MapPin, ArrowRight, Truck, Soup } from "lucide-react";
 import { foodShops } from "../lib/mockData";
 import { DynamicAdSlot, FoodCard, SEOHead, SectionHeader } from "../components/marketplace";
@@ -13,7 +13,8 @@ import { EmptyStateBlock, ErrorStateBlock, SkeletonCard } from "../components/fe
 const cuisineFilters = ["All", "Cafe", "Chinese", "Momo", "Bakery", "Indian", "Pizza", "Snacks"];
 
 export default function Food() {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("q") || "";
   const [delivery, setDelivery] = useState(false);
   const [distance, setDistance] = useState("15");
   const [cuisine, setCuisine] = useState("All");
@@ -40,7 +41,7 @@ export default function Food() {
           shop.description?.toLowerCase().includes(search.toLowerCase());
         const matchesCuisine = cuisine === "All" || shop.description?.toLowerCase().includes(cuisine.toLowerCase());
         const matchesDelivery = !delivery || shop.delivery_available;
-        const matchesDistance = shop.distance_meters / 1000 <= Number(distance);
+        const matchesDistance = shop.distance_meters / 1000 <= Number(distance) || shop.distance_meters === 0;
         return matchesSearch && matchesCuisine && matchesDelivery && matchesDistance;
       }),
     [cuisine, delivery, distance, nearbyShops, search],
@@ -93,7 +94,13 @@ export default function Food() {
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-orange-700" />
               <Input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  const params = new URLSearchParams(searchParams);
+                  if (next) params.set("q", next);
+                  else params.delete("q");
+                  setSearchParams(params, { replace: true });
+                }}
                 aria-label="Search food shops"
                 className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 text-base font-bold transition-all focus:bg-white focus:ring-4 focus:ring-orange-100"
                 placeholder="Search for Chinese, Cafe, Momos..."

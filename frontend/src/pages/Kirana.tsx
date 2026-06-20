@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Search, ShoppingBasket, Store, MapPin, ArrowRight, Truck } from "lucide-react";
 import { kiranaStores } from "../lib/mockData";
 import { DynamicAdSlot, KiranaCard, SEOHead, SectionHeader } from "../components/marketplace";
@@ -8,10 +8,13 @@ import { Input } from "../components/ui/input";
 import { cn } from "../lib/utils";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { useNearbyBusinesses } from "../lib/businesses";
+import { useDebounce } from "../hooks/useDebounce";
 import { EmptyStateBlock, ErrorStateBlock, SkeletonCard } from "../components/feedback";
 
 export default function Kirana() {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("q") || "";
+  const debouncedSearch = useDebounce(search, 300);
   const [delivery, setDelivery] = useState(false);
   const [distance, setDistance] = useState("15");
   const { location, error: locationError, searchTerm } = useGeolocation();
@@ -31,14 +34,14 @@ export default function Kirana() {
     () =>
       nearbyShops.filter((shop) => {
         const matchesSearch =
-          !search ||
-          shop.name.toLowerCase().includes(search.toLowerCase()) ||
-          shop.area.toLowerCase().includes(search.toLowerCase());
+          !debouncedSearch ||
+          shop.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          shop.area.toLowerCase().includes(debouncedSearch.toLowerCase());
         const matchesDelivery = !delivery || shop.delivery_available;
-        const matchesDistance = shop.distance_meters / 1000 <= Number(distance);
+        const matchesDistance = shop.distance_meters / 1000 <= Number(distance) || shop.distance_meters === 0;
         return matchesSearch && matchesDelivery && matchesDistance;
       }),
-    [delivery, distance, nearbyShops, search],
+    [delivery, distance, nearbyShops, debouncedSearch],
   );
 
   return (
@@ -88,7 +91,13 @@ export default function Kirana() {
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-amber-700" />
               <Input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  const params = new URLSearchParams(searchParams);
+                  if (next) params.set("q", next);
+                  else params.delete("q");
+                  setSearchParams(params, { replace: true });
+                }}
                 aria-label="Search kirana shops"
                 className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 pl-12 text-base font-bold transition-all focus:bg-white focus:ring-4 focus:ring-amber-100"
                 placeholder="Search by shop name or area"

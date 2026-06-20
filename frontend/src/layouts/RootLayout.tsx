@@ -20,7 +20,7 @@ export default function RootLayout() {
         Skip to content
       </a>
       <Header />
-      <main id="main-content" className="relative z-10 pb-[calc(7rem+env(safe-area-inset-bottom))] lg:pb-0">
+      <main id="main-content" className="relative z-10 pb-[calc(6.5rem+env(safe-area-inset-bottom))] lg:pb-0">
         <Outlet />
       </main>
       <InstallPrompt />

@@ -89,7 +89,7 @@ export default function Login() {
                 <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-slate-400">Password</Label>
                 <a href="#" className="text-xs font-black text-emerald-700 hover:underline">Forgot?</a>
               </div>
-              <Input id="password" type="password" placeholder="••••••••" className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-6 font-bold focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all" {...register('password')} />
+              <Input id="password" type="password" placeholder="********" className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-6 font-bold focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all" {...register('password')} />
               {errors.password && <p className="text-xs font-bold text-red-500">{errors.password.message}</p>}
             </div>
             

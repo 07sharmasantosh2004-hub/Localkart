@@ -65,34 +65,34 @@ const toneClasses: Record<CardTone, string> = {
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#FFF7ED] pt-10 pb-10 lg:pt-16 lg:pb-16">
+    <section className="relative overflow-hidden bg-[#FFF7ED] pb-24 pt-8 min-[420px]:pb-28 min-[420px]:pt-10 lg:pb-16 lg:pt-16">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <div className="relative z-10 grid gap-12 lg:grid-cols-2 lg:items-center">
-          <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-black uppercase tracking-widest text-emerald-700 shadow-sm ring-1 ring-emerald-100">
+        <div className="relative z-10 grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-12">
+          <div className="space-y-6 animate-in fade-in slide-in-from-left-8 duration-1000 min-[420px]:space-y-8">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 shadow-sm ring-1 ring-emerald-100 min-[420px]:px-4 min-[420px]:text-xs">
               Direct local commerce on WhatsApp
             </div>
-            <h1 className="max-w-full break-words text-4xl font-black leading-[1.05] tracking-tight text-slate-950 sm:text-6xl md:text-8xl">
+            <h1 className="max-w-full break-words text-[2rem] font-black leading-[1.08] tracking-tight text-slate-950 min-[380px]:text-4xl sm:text-6xl md:text-7xl xl:text-8xl">
               <span className="block">Find Nearby Shops.</span>
-              <span className="block text-emerald-700 underline decoration-amber-400 decoration-8 underline-offset-8">Order Direct.</span>
+              <span className="block text-emerald-700 underline decoration-amber-400 decoration-[6px] underline-offset-4 min-[420px]:decoration-8 min-[420px]:underline-offset-8">Order Direct.</span>
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
+            <p className="max-w-xl text-base leading-7 text-slate-600 min-[420px]:text-lg min-[420px]:leading-8 sm:text-xl">
               Connect with trusted tiffin services, kirana stores, and food shops directly on WhatsApp. No platform markup, no hidden fees.
             </p>
-            <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:flex-wrap sm:items-center">
-              <Button asChild size="lg" className="h-14 w-full rounded-2xl bg-[#064E3B] px-6 text-base font-black text-white shadow-2xl shadow-emerald-950/20 transition-all hover:scale-105 sm:w-auto">
+            <div className="flex flex-col gap-3 pt-2 min-[420px]:pt-4 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button asChild size="lg" className="h-[3.25rem] w-full rounded-2xl bg-[#064E3B] px-5 text-base font-black text-white shadow-2xl shadow-emerald-950/20 transition-all hover:scale-105 min-[420px]:h-14 sm:w-auto sm:px-6">
                 <Link to="/tiffin-services" className="flex items-center gap-2">
                   <Soup className="h-4 w-4" />
                   Find Tiffin
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-14 w-full rounded-2xl border-slate-200 bg-white px-6 text-base font-black text-slate-900 shadow-sm transition-all hover:scale-105 hover:bg-slate-50 sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="h-[3.25rem] w-full rounded-2xl border-slate-200 bg-white px-5 text-base font-black text-slate-900 shadow-sm transition-all hover:scale-105 hover:bg-slate-50 min-[420px]:h-14 sm:w-auto sm:px-6">
                 <Link to="/kirana" className="flex items-center gap-2">
                   <ShoppingBasket className="h-4 w-4 text-emerald-700" />
                   Order Groceries
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-14 w-full rounded-2xl border-orange-200 bg-orange-50 px-6 text-base font-black text-orange-950 shadow-sm transition-all hover:scale-105 hover:bg-orange-100 sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="h-[3.25rem] w-full rounded-2xl border-orange-200 bg-orange-50 px-5 text-base font-black text-orange-950 shadow-sm transition-all hover:scale-105 hover:bg-orange-100 min-[420px]:h-14 sm:w-auto sm:px-6">
                 <Link to="/food" className="flex items-center gap-2">
                   <Utensils className="h-4 w-4 text-orange-700" />
                   Café & Food
@@ -100,11 +100,11 @@ export function HeroSection() {
               </Button>
             </div>
           </div>
-          <div className="relative animate-in fade-in zoom-in duration-1000">
+          <div className="relative mx-auto w-full max-w-[22rem] animate-in fade-in zoom-in duration-1000 sm:max-w-md lg:max-w-none">
              {/* Abstract Premium Visuals */}
-             <div className="relative aspect-square w-full max-w-xl mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-amber-500/10 rounded-[4rem] rotate-3 blur-2xl" />
-                <div className="absolute inset-0 bg-white shadow-2xl shadow-emerald-950/10 rounded-[4rem] -rotate-3 overflow-hidden border border-slate-100 p-2">
+             <div className="relative mx-auto aspect-[4/3] w-full sm:aspect-square lg:max-w-xl">
+                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-emerald-500/10 to-amber-500/10 blur-2xl min-[420px]:rotate-3 sm:rounded-[4rem]" />
+                <div className="absolute inset-0 overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-1 shadow-2xl shadow-emerald-950/10 min-[420px]:-rotate-3 sm:rounded-[4rem] sm:p-2">
                     <img
                       src="/poster.png" 
                       alt="LocalKart Featured" 
@@ -113,7 +113,7 @@ export function HeroSection() {
                       loading="eager"
                       decoding="async"
                       fetchPriority="high"
-                      className="h-full w-full object-cover rounded-[3.5rem]" 
+                      className="h-full w-full rounded-[1.75rem] object-cover sm:rounded-[3.5rem]" 
                     />
                  </div>
              </div>
@@ -320,18 +320,18 @@ export function CategoryCard({
     <Link
       to={to}
       className={cn(
-        "group relative overflow-hidden rounded-[2.5rem] border p-8 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-950/10",
+        "group relative overflow-hidden rounded-[1.75rem] border p-5 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-950/10 sm:rounded-[2.5rem] sm:p-8",
         toneClasses[tone],
       )}
     >
       <div className="relative z-10">
-        <div className="mb-6 flex items-start justify-between">
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">{icon}</span>
           <span className="rounded-full bg-white/60 px-4 py-1 text-xs font-black uppercase tracking-widest backdrop-blur-sm">Direct</span>
         </div>
         <h3 className="text-2xl font-black tracking-tight text-slate-950">{title}</h3>
         <p className="mt-3 text-base leading-7 opacity-80">{text}</p>
-        <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-2.5 text-sm font-black text-white transition-all duration-300 group-hover:gap-4">
+        <span className="mt-6 inline-flex max-w-full items-center gap-2 rounded-full bg-slate-950 px-5 py-2.5 text-sm font-black text-white transition-all duration-300 group-hover:gap-4">
           {cta}
           <ExternalLink className="h-4 w-4" />
         </span>
@@ -414,11 +414,11 @@ export const BusinessCard = memo(function BusinessCard({ business, to, actionLab
           {business.rating && <RatingBadge rating={business.rating} />}
         </div>
       </Link>
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col p-4 sm:p-6">
         <Link to={to}>
           <h3 className="text-xl font-black tracking-tight text-slate-950 group-hover:text-emerald-800">{business.name}</h3>
         </Link>
-        <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-slate-500">
+        <div className="mt-1 flex min-w-0 items-center gap-1.5 text-sm font-semibold text-slate-500">
           <MapPin className="h-3.5 w-3.5" />
           {business.area}, {business.city}
         </div>
@@ -445,7 +445,7 @@ export function TiffinCard({ provider }: { provider: Business }) {
 
 export function KiranaCard({ shop }: { shop: Business }) {
   return (
-    <article className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-3xl">
       <Link to={`/kirana/${shop.slug}`} className="block">
         <div className="relative h-44 overflow-hidden">
           <SmartImage src={shop.cover_image} alt={shop.name} className="h-full w-full transition duration-700 hover:scale-105" />
@@ -461,12 +461,12 @@ export function KiranaCard({ shop }: { shop: Business }) {
           </div>
         </div>
       </Link>
-      <div className="p-4">
+      <div className="p-4 sm:p-5">
         <Link to={`/kirana/${shop.slug}`}>
           <h3 className="text-lg font-black text-slate-950">{shop.name}</h3>
         </Link>
         <p className="mt-1 text-sm text-slate-600">{shop.area}, {shop.city}</p>
-        <div className="mt-3 flex items-center justify-between rounded-2xl bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-amber-50 px-3 py-2 text-sm text-amber-800">
           <span>Minimum order</span>
           <strong>{shop.min_order ? `Rs ${shop.min_order}` : "Ask shop"}</strong>
         </div>
@@ -489,7 +489,7 @@ export function KiranaCard({ shop }: { shop: Business }) {
 
 export function FoodCard({ shop }: { shop: Business }) {
   return (
-    <article className="overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="overflow-hidden rounded-[1.5rem] border border-orange-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:rounded-3xl">
       <Link to={`/food/${shop.slug}`} className="block">
         <div className="relative h-44 overflow-hidden">
           <SmartImage src={shop.cover_image} alt={shop.name} className="h-full w-full transition duration-700 hover:scale-105" />
@@ -506,7 +506,7 @@ export function FoodCard({ shop }: { shop: Business }) {
           </div>
         </div>
       </Link>
-      <div className="p-4">
+      <div className="p-4 sm:p-5">
         <Link to={`/food/${shop.slug}`}>
           <h3 className="text-lg font-black text-slate-950">{shop.name}</h3>
         </Link>

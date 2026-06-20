@@ -62,7 +62,7 @@ export default function TiffinServiceDetail() {
                 <RatingBadge rating={provider.rating} />
                 {provider.delivery_available ? <Badge className="rounded-full bg-emerald-50 text-emerald-700">Delivery available</Badge> : null}
               </div>
-              <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl md:text-7xl">{provider.name}</h1>
+              <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">{provider.name}</h1>
               <p className="mt-3 max-w-2xl text-base font-medium text-white/80 sm:mt-4 sm:text-lg">{provider.address}</p>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function TiffinServiceDetail() {
             { label: provider.delivery_available ? "Home delivery available" : "Pickup depends on availability", icon: Truck, color: "text-blue-700", bg: "bg-blue-50" },
             { label: "Provider confirms directly", icon: ShieldCheck, color: "text-purple-700", bg: "bg-purple-50" },
           ].map((item) => (
-            <div key={item.label} className="flex items-center gap-4 rounded-[2rem] border border-white bg-white/60 p-5 shadow-sm backdrop-blur-sm">
+            <div key={item.label} className="flex items-center gap-4 rounded-[1.5rem] border border-white bg-white/60 p-4 shadow-sm backdrop-blur-sm sm:p-5 md:rounded-[2rem]">
               <span className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-inner", item.bg, item.color)}>
                 <item.icon className="h-6 w-6" />
               </span>
@@ -91,7 +91,7 @@ export default function TiffinServiceDetail() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#064E3B] text-white shadow-lg">
                   <Utensils className="h-5 w-5" />
                 </div>
-                <h2 className="text-3xl font-black tracking-tight text-slate-950">Meal Plans</h2>
+                <h2 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Meal Plans</h2>
               </div>
               <div className="grid gap-4">
                 {plans.map((plan) => (
@@ -115,7 +115,7 @@ export default function TiffinServiceDetail() {
                   </div>
                 ))}
               </div>
-              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-4 min-[420px]:flex-row">
                 <Button asChild variant="outline" className="h-14 flex-1 rounded-[1.5rem] border-slate-200 bg-white text-lg font-black text-slate-700 hover:bg-slate-50 shadow-sm">
                   <a href={`tel:${provider.phone}`}>
                     <Phone className="h-5 w-5" />

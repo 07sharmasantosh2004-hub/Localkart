@@ -6,3 +6,6 @@
 -- database/001_initial_schema.sql
 -- database/002_add_food_business_type.sql
 -- database/003_food_section.sql
+-- database/004_production_hardening.sql
+-- database/005_lead_status_defaults.sql
+-- database/006_tiffin_services_location.sql

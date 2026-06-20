@@ -135,8 +135,8 @@ Please confirm price, availability, and delivery time.`;
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-2xl shadow-emerald-950/5 md:p-8">
-      <div className="mb-8 flex items-center gap-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-2xl shadow-emerald-950/5 sm:rounded-[2.5rem] sm:p-6 md:p-8">
+      <div className="mb-8 flex flex-col gap-4 min-[380px]:flex-row min-[380px]:items-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-700 shadow-inner">
           <Soup className="h-7 w-7" />
         </span>
@@ -335,8 +335,8 @@ Please confirm availability and delivery time.`;
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-2xl shadow-emerald-950/5 md:p-8">
-      <div className="mb-8 flex items-center gap-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-2xl shadow-emerald-950/5 sm:rounded-[2.5rem] sm:p-6 md:p-8">
+      <div className="mb-8 flex flex-col gap-4 min-[380px]:flex-row min-[380px]:items-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 shadow-inner">
           <ShoppingBasket className="h-7 w-7" />
         </span>
@@ -527,8 +527,8 @@ Please confirm availability, total amount and timing.`;
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[2.5rem] border border-slate-100 bg-white p-6 shadow-2xl shadow-emerald-950/5 md:p-8">
-      <div className="mb-8 flex items-center gap-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-2xl shadow-emerald-950/5 sm:rounded-[2.5rem] sm:p-6 md:p-8">
+      <div className="mb-8 flex flex-col gap-4 min-[380px]:flex-row min-[380px]:items-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-700 shadow-inner">
           <Utensils className="h-7 w-7" />
         </span>

@@ -16,8 +16,8 @@ Deno.serve(async (req) => {
       .eq("id", body.business_id)
       .maybeSingle();
 
-    if (businessError || !business || business.type !== "salon" || business.status !== "approved") {
-      return jsonResponse({ error: "Salon is not available for booking." }, 400);
+    if (businessError || !business || !["tiffin", "salon"].includes(business.type) || business.status !== "approved") {
+      return jsonResponse({ error: "Tiffin service is not available for enquiry." }, 400);
     }
 
     if (body.service_id) {
@@ -28,11 +28,11 @@ Deno.serve(async (req) => {
         .eq("business_id", business.id)
         .eq("is_active", true)
         .maybeSingle();
-      if (!service) return jsonResponse({ error: "Selected service is not available." }, 400);
+      if (!service) return jsonResponse({ error: "Selected meal plan is not available." }, 400);
     }
 
     const message = body.whatsapp_message ??
-      `Hello ${business.name}, I want to book a salon appointment.\n\nName: ${body.customer_name}\nPhone: ${body.customer_phone}\nPreferred Date: ${body.preferred_date ?? "Flexible"}\nPreferred Time: ${body.preferred_time ?? "Flexible"}\nNote: ${body.note ?? "No note"}\n\nPlease confirm my booking.`;
+      `Hello ${business.name}, I want to enquire about tiffin service.\n\nName: ${body.customer_name}\nPhone: ${body.customer_phone}\nPreferred Date: ${body.preferred_date ?? "Flexible"}\nMeal Time: ${body.preferred_time ?? "Flexible"}\nNote: ${body.note ?? "No note"}\n\nPlease confirm price, availability and delivery time.`;
 
     const { data: lead, error: leadError } = await supabase
       .from("whatsapp_booking_leads")
@@ -46,6 +46,8 @@ Deno.serve(async (req) => {
         preferred_time: body.preferred_time ?? null,
         note: body.note ?? null,
         whatsapp_message: message,
+        selected_items: body.selected_items ?? null,
+        metadata: body.metadata ?? null,
         status: "sent",
       })
       .select("id")

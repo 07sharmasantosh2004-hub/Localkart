@@ -15,7 +15,7 @@ export default defineConfig({
       manifest: {
         name: 'LocalKart',
         short_name: 'LocalKart',
-        description: 'Book salon appointments or order groceries from trusted local shops near you directly on WhatsApp.',
+        description: 'Find tiffin services, kirana stores and food shops near you, then contact them directly on WhatsApp.',
         theme_color: '#047857',
         background_color: '#f7faf7',
         display: 'standalone',
@@ -52,5 +52,29 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    reportCompressedSize: true,
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
+  },
+  server: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  },
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '0.0.0'),
   },
 })

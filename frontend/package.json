@@ -6,12 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:android": "npm run build && npm run build:android:bundle",
+    "build:android:bundle": "bash scripts/build-android.sh",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run --config vitest.config.ts",
     "sitemap": "node scripts/generate-sitemap.mjs",
-    "prebuild": "npm run sitemap"
+    "prebuild": "npm run sitemap",
+    "analyze": "vite build --analyze",
+    "security-audit": "npm audit --audit-level=moderate"
   },
   "dependencies": {
     "@capacitor/cli": "^7.6.2",

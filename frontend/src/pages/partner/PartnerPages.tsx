@@ -108,10 +108,10 @@ interface PartnerFoodItem {
 }
 
 const serviceSchema = z.object({
-  name: z.string().min(2, "Service name is required"),
+  name: z.string().min(2, "Plan name is required"),
   categoryId: z.string().optional(),
   price: z.coerce.number().min(0, "Price is required"),
-  durationMinutes: z.coerce.number().min(5, "Duration is required"),
+  durationMinutes: z.coerce.number().min(1, "Duration is required"),
   isActive: z.boolean().default(true),
 });
 
@@ -175,6 +175,7 @@ function usePartnerBusiness() {
 
 export function PartnerLayout() {
   const { data: business } = usePartnerBusiness();
+  const { signOut } = useAuth();
   const nav = [
     { label: "Overview", to: "/partner", icon: BarChart3 },
     { label: "Onboarding", to: "/partner/onboarding", icon: Store },
@@ -217,7 +218,7 @@ export function PartnerLayout() {
               </div>
             </div>
           </Link>
-          <div className="flex w-full items-center gap-3 sm:w-auto">
+          <div className="flex w-full min-w-0 items-center gap-3 sm:w-auto">
             <Button asChild variant="outline" className="w-full rounded-xl border-slate-200 font-black text-slate-600 shadow-sm transition-all hover:bg-slate-50 sm:w-auto">
               <Link to="/" className="flex items-center gap-2">View Live Shop <ChevronRight className="h-4 w-4" /></Link>
             </Button>
@@ -227,7 +228,7 @@ export function PartnerLayout() {
 
       <div className="mx-auto grid max-w-7xl gap-6 px-3 py-6 sm:px-4 md:px-6 md:py-8 lg:grid-cols-[280px_1fr] lg:gap-8">
         <aside className="lg:sticky lg:top-28 lg:h-[calc(100vh-140px)]">
-           <div className="flex h-full flex-col gap-4 rounded-[2.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 lg:gap-6">
+           <div className="flex h-full flex-col gap-4 rounded-[1.5rem] border border-slate-100 bg-white p-3 shadow-xl shadow-emerald-950/5 sm:p-4 lg:rounded-[2.5rem] lg:gap-6">
               <nav className="flex gap-2 overflow-x-auto no-scrollbar pr-1 lg:block lg:flex-1 lg:space-y-1 lg:overflow-y-auto" aria-label="Partner sections">
                 {nav.filter(item => !item.hide).map((item) => (
                   <NavLink
@@ -250,7 +251,11 @@ export function PartnerLayout() {
               </nav>
               
               <div className="mt-auto hidden border-t border-slate-50 pt-4 lg:block">
-                 <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-red-500 hover:bg-red-50 transition-all">
+                 <button
+                   type="button"
+                   onClick={() => void signOut()}
+                   className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black text-red-500 transition-all hover:bg-red-50"
+                 >
                     <LogOut className="h-5 w-5" />
                     Log Out
                  </button>
@@ -294,11 +299,11 @@ export function PartnerDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <section className="relative overflow-hidden rounded-[3rem] bg-[#064E3B] p-8 md:p-12 text-white shadow-2xl shadow-emerald-950/10">
+      <section className="relative overflow-hidden rounded-[1.5rem] bg-[#064E3B] p-5 text-white shadow-2xl shadow-emerald-950/10 sm:p-8 md:rounded-[3rem] md:p-12">
          <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <Badge className="rounded-full bg-white/10 text-emerald-100 font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-sm border border-white/10">Partner Dashboard</Badge>
-              <h1 className="text-4xl font-black tracking-tight md:text-5xl">Namaste, {business.name}</h1>
+              <h1 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">Namaste, {business.name}</h1>
               <p className="max-w-2xl text-lg font-medium text-emerald-50/80 leading-8">
                 Yahan se aap apni shop details, WhatsApp number, services aur customer leads manage kar sakte hain.
               </p>
@@ -324,8 +329,8 @@ export function PartnerDashboard() {
         ))}
       </div>
 
-      <div className="rounded-[3rem] border border-slate-100 bg-white p-8 shadow-xl shadow-emerald-950/5">
-        <div className="flex items-center justify-between mb-8">
+      <div className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-8 md:rounded-[3rem]">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
            <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 shadow-inner">
                 <MessageCircle className="h-5 w-5" />
@@ -358,11 +363,11 @@ function profileCompletion(business: PartnerBusiness) {
 
 export function PartnerOnboarding() {
   return (
-    <div className="rounded-[3rem] border border-slate-100 bg-white p-8 shadow-xl shadow-emerald-950/5">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-8 md:rounded-[3rem]">
+      <div className="mb-6 flex flex-col gap-4 min-[380px]:flex-row min-[380px]:items-center">
          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
          </div>
-         <h1 className="text-3xl font-black text-slate-950 tracking-tight">Complete your Studio setup</h1>
+         <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Complete your Studio setup</h1>
       </div>
       <p className="text-lg leading-8 text-slate-600 mb-8">Photo, timing, services, products, menu aur WhatsApp number sahi rakhein. Yehi details customers ko dikhegi.</p>
       
@@ -382,7 +387,7 @@ export function PartnerOnboarding() {
         ))}
       </div>
       <div className="mt-10">
-        <Button asChild size="lg" className="h-16 rounded-[1.5rem] bg-[#064E3B] px-10 text-lg font-black text-white shadow-xl shadow-emerald-950/20 hover:scale-[1.02] transition-all">
+        <Button asChild size="lg" className="h-14 w-full rounded-[1.5rem] bg-[#064E3B] px-5 text-base font-black text-white shadow-xl shadow-emerald-950/20 transition-all hover:scale-[1.02] sm:h-16 sm:w-auto sm:px-10 sm:text-lg">
           <Link to="/partner/business" className="flex items-center gap-2">Start Setting Up <ArrowRight className="h-5 w-5" /></Link>
         </Button>
       </div>
@@ -393,12 +398,12 @@ export function PartnerOnboarding() {
 export function PartnerProfile() {
   const { profile, user } = useAuth();
   return (
-    <div className="rounded-[3rem] border border-slate-100 bg-white p-8 shadow-xl shadow-emerald-950/5">
-      <div className="flex items-center gap-4 mb-10">
+    <div className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-8 md:rounded-[3rem]">
+      <div className="mb-10 flex flex-col gap-4 min-[380px]:flex-row min-[380px]:items-center">
          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 text-slate-700">
             <Edit3 className="h-7 w-7" />
          </div>
-         <h1 className="text-3xl font-black text-slate-950 tracking-tight">Owner profile</h1>
+         <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Owner profile</h1>
       </div>
       <div className="grid gap-8 md:grid-cols-2">
         <Info label="Full Name" value={profile?.full_name || "Not added"} />
@@ -524,23 +529,23 @@ export function PartnerServicesPage() {
 
   return (
     <FormShell title="Tiffin meal plans" text="Add trial meals, daily meals, weekly and monthly tiffin plans. Customers select a plan before WhatsApp enquiry.">
-      <form className="grid gap-4 md:grid-cols-4 mb-10" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
-        <TextInput label="Service name" register={form.register("name")} />
+      <form className="mb-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
+        <TextInput label="Plan name" register={form.register("name")} />
         <TextInput label="Price (Rs)" register={form.register("price")} />
-        <TextInput label="Duration (min)" register={form.register("durationMinutes")} />
-        <div className="pt-6">
-           <Button className="h-14 w-full rounded-2xl bg-[#064E3B] font-black text-white hover:bg-emerald-900 shadow-lg"><Plus className="h-5 w-5" /> {editingServiceId ? "Update" : "Add Service"}</Button>
+        <TextInput label="Duration (days)" register={form.register("durationMinutes")} />
+        <div className="sm:col-span-2 sm:pt-6 xl:col-span-1">
+           <Button className="h-14 w-full rounded-2xl bg-[#064E3B] font-black text-white hover:bg-emerald-900 shadow-lg"><Plus className="h-5 w-5" /> {editingServiceId ? "Update" : "Add Plan"}</Button>
         </div>
       </form>
       <div className="grid gap-4">
         {data.map((item) => (
-          <div key={item.id} className="group flex flex-col gap-4 rounded-[2rem] border border-slate-50 bg-slate-50/50 p-6 md:flex-row md:items-center md:justify-between transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5">
+          <div key={item.id} className="group flex flex-col gap-4 rounded-[1.5rem] border border-slate-50 bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5 sm:p-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-lg font-black text-slate-950">{item.name}</p>
               <p className="flex items-center gap-2 text-sm font-bold text-slate-500">
                  <span className="text-emerald-700">Rs {item.price}</span>
                  <span className="opacity-20">•</span>
-                 <span>{item.duration_minutes} min</span>
+                 <span>{item.duration_minutes} days</span>
               </p>
             </div>
             <div className="flex gap-2">
@@ -603,21 +608,21 @@ export function PartnerProductsPage() {
 
   return (
     <FormShell title="Kirana products" text="Add common grocery items. Customers can also write a custom list manually.">
-      <form className="grid gap-4 md:grid-cols-5 mb-10" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
+      <form className="mb-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-5" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
         <TextInput label="Product name" register={form.register("name")} />
         <TextInput label="Unit (e.g. 1kg)" register={form.register("unit")} />
         <TextInput label="MRP" register={form.register("mrp")} />
         <TextInput label="Selling price" register={form.register("price")} />
-        <div className="pt-6">
+        <div className="sm:col-span-2 sm:pt-6 xl:col-span-1">
            <Button className="h-14 w-full rounded-2xl bg-[#064E3B] font-black text-white hover:bg-emerald-900 shadow-lg"><Plus className="h-5 w-5" /> {editingProductId ? "Update" : "Add Product"}</Button>
         </div>
       </form>
       <div className="grid gap-4">
         {data.map((item) => (
-          <div key={item.id} className="group flex flex-col gap-4 rounded-[2rem] border border-slate-50 bg-slate-50/50 p-6 md:flex-row md:items-center md:justify-between transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5">
+          <div key={item.id} className="group flex flex-col gap-4 rounded-[1.5rem] border border-slate-50 bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5 sm:p-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-lg font-black text-slate-950">{item.name}</p>
-              <p className="flex items-center gap-2 text-sm font-bold text-slate-500">
+              <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
                  <span className="text-emerald-700">Rs {item.price || "Ask shop"}</span>
                  <span className="opacity-20">•</span>
                  <span>{item.unit || "Unit"}</span>
@@ -733,7 +738,7 @@ export function FoodMenuManager() {
 
       <div className="grid gap-4">
         {data.map((item) => (
-          <div key={item.id} className="group flex flex-col gap-4 rounded-[2rem] border border-slate-50 bg-slate-50/50 p-6 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5 md:flex-row md:items-center md:justify-between">
+          <div key={item.id} className="group flex flex-col gap-4 rounded-[1.5rem] border border-slate-50 bg-slate-50/50 p-4 transition-all hover:bg-white hover:shadow-xl hover:shadow-emerald-950/5 sm:p-6 md:flex-row md:items-center md:justify-between">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="text-lg font-black text-slate-950">{item.name}</p>
@@ -769,10 +774,10 @@ export function FoodMenuManager() {
 // Helper components with updated styles
 function FormShell({ title, text, children }: { title: string; text: string; children: ReactNode }) {
   return (
-    <div className="rounded-[3rem] border border-slate-100 bg-white p-8 shadow-xl shadow-emerald-950/5">
+    <div className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-8 md:rounded-[3rem]">
       <div className="mb-10">
-        <h1 className="text-3xl font-black text-slate-950 tracking-tight">{title}</h1>
-        <p className="mt-3 text-lg leading-8 text-slate-600">{text}</p>
+        <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{title}</h1>
+        <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">{text}</p>
       </div>
       {children}
     </div>
@@ -834,9 +839,9 @@ function LatestLeads({ business }: { business: PartnerBusiness }) {
   return (
     <div className="grid gap-4">
       {rows.slice(0, 8).map((lead) => (
-        <div key={lead.id} className="group flex flex-col gap-4 rounded-3xl border border-slate-50 bg-slate-50/30 p-6 transition-all hover:bg-white hover:shadow-lg">
-           <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+        <div key={lead.id} className="group flex flex-col gap-4 rounded-[1.5rem] border border-slate-50 bg-slate-50/30 p-4 transition-all hover:bg-white hover:shadow-lg sm:p-6 sm:rounded-3xl">
+           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-4">
                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[#064E3B] shadow-sm font-black border border-slate-100">
                     {lead.name.charAt(0)}
                  </div>
@@ -850,13 +855,13 @@ function LatestLeads({ business }: { business: PartnerBusiness }) {
            <div className="rounded-2xl bg-white p-4 border border-slate-100 italic text-sm text-slate-600 line-clamp-2">
               "{lead.detail}"
            </div>
-           <div className="flex gap-2">
+           <div className="flex flex-col gap-2 min-[380px]:flex-row">
               <Button asChild size="sm" className="h-10 rounded-xl bg-[#25D366] font-black text-white hover:bg-[#128C7E] flex-1">
                  <a href={generateWhatsAppLink(lead.phone, "Hello " + lead.name + ", we received your LocalKart tiffin enquiry...")} target="_blank" rel="noreferrer">
                     <MessageCircle className="h-4 w-4" /> Reply on WhatsApp
                  </a>
               </Button>
-              <Button asChild variant="outline" size="sm" className="h-10 w-10 rounded-xl border-slate-200 text-slate-400">
+              <Button asChild variant="outline" size="sm" className="h-10 rounded-xl border-slate-200 text-slate-400 min-[380px]:w-10">
                  <a href={`tel:${lead.phone}`}><Phone className="h-4 w-4" /></a>
               </Button>
            </div>
